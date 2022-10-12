@@ -5,6 +5,7 @@ gradle/
 
 gradlew
 gradlew.bat
+usuf-bot.log
 
 gradle-app.setting
 !gradle-wrapper.jar

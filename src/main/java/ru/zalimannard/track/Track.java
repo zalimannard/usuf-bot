@@ -2,11 +2,13 @@ package ru.zalimannard.track;
 
 import ru.zalimannard.Time;
 import ru.zalimannard.track.platform.Platform;
+import ru.zalimannard.track.platform.YouTubePlatform;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -38,6 +40,13 @@ public class Track {
         this.requesterId = requesterId;
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        directory.delete();
+        trackFile.delete();
+    }
+
     /**
      * Gets requester id.
      *
@@ -54,7 +63,11 @@ public class Track {
      * @throws IOException the io exception
      */
     public File getTrackFile() throws IOException {
-        directory = Files.createTempDirectory("Video").toFile();
+        if (trackFile == null) {
+            directory = Files.createTempDirectory("Video").toFile();
+            TrackLoader trackLoader = new TrackLoader();
+            trackFile = trackLoader.download(this, directory);
+        }
         return trackFile;
     }
 

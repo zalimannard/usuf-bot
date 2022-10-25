@@ -2,6 +2,7 @@ package ru.zalimannard.track.platform;
 
 import ru.zalimannard.track.Track;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -30,14 +31,14 @@ public interface Platform {
      * @param url the url
      * @return track list
      */
-    ArrayList<Track> getTracksByUrl(String url);
+    ArrayList<Track> getTracksByUrl(String url, String requesterId);
 
     /**
      * Adds a file with the contents of the track to an already existing track.
      *
      * @param track to download
      */
-    void download(Track track);
+    File download(Track track, File directory);
 
     /**
      * Gets a link to a small preview of the video

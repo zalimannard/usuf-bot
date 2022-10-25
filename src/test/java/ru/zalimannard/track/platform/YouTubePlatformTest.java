@@ -63,7 +63,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String incorrectVideoUrl = "https://youtube.ru/watch?v=I8iYWNs_Tik";
 
-        assertTrue(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
+        assertFalse(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
     }
 
     @Test
@@ -71,7 +71,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String incorrectVideoUrl = "http://youtube.com/watch?v=I8iYWNs_Tik";
 
-        assertTrue(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
+        assertFalse(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
     }
 
     @Test
@@ -79,7 +79,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String rutubeVideoUrl = "https://rutube.ru/video/4a0e63c4eb5ed4034f6eb2d2e6aaf65d/";
 
-        assertTrue(youTubePlatform.isFromThisPlatform(rutubeVideoUrl));
+        assertFalse(youTubePlatform.isFromThisPlatform(rutubeVideoUrl));
     }
 
     @Test
@@ -127,7 +127,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(1, tracks.size());
     }
@@ -137,7 +137,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtu.be/I8iYWNs_Tik?t=1";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(1, tracks.size());
     }
@@ -147,7 +147,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://www.youtube.com/watch?v=Gx7OL52qx-c&ab_channel=Arthas.mp4";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(1, tracks.size());
     }
@@ -157,7 +157,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://www.youtube.com/watch?v=Gx7OL5FFFFFFFFFFFFFFFFF++2qx-c&ab_channel=Arthas.mp4";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(0, tracks.size());
     }
@@ -167,7 +167,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/playlist?list=PLl-U4gPoKWcfPzKP71ivan4F2WZRmCpgl";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(1, tracks.size());
     }
@@ -177,9 +177,29 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/playlist?list=PLl-U4gPoKWcdl4hY7F_MD2-f1lAkIabZi";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(3, tracks.size());
+    }
+
+    @Test
+    void getTracksByUrl_threeVideosLinkOnlyPlaylistUrl_threeTracksInList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://youtube.com/playlist?list=PLl-U4gPoKWccv5m8rfTri0JgJl6kmYhAq";
+
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
+
+        assertEquals(3, tracks.size());
+    }
+
+    @Test
+    void getTracksByUrl_incorrectPlaylistUrl_emptyTrackList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://youtube.com/playlist?list=PLl-U4gPoKWSSSSSSSSSSSSSSSSSccv5m8rfTri0JgJl6kmYhAq";
+
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
+
+        assertEquals(0, tracks.size());
     }
 
     @Test
@@ -187,7 +207,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtu.be/FmK-jkQOeKY";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(0, tracks.size());
     }
@@ -197,7 +217,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/playlist?list=PLl-U4gPoKWccwhMCYqeYRlbfbERXrDJbm";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(3, tracks.size());
     }
@@ -207,7 +227,7 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
 
         assertEquals(0, tracks.size());
     }
@@ -217,11 +237,10 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
         assertNotEquals(0, tracks.size());
 
         Track track = tracks.get(0);
-        youTubePlatform.download(track);
 
         try {
             assertNotNull(track.getTrackFile());
@@ -232,13 +251,10 @@ class YouTubePlatformTest {
 
     @Test
     void download_notAvailableForDownloadVideo_nullVideoFile() {
-        YouTubePlatform youTubePlatform = new YouTubePlatform();
-        Track track = null;
-        track = new Track(null, null, null, "https://youtube.com/watch?v=I8iYWNs_Tik\"", null);
-        youTubePlatform.download(track);
+        Track track = new Track(null, null, null, "https://youtube.com/watch?v=I8iYWNs_Tikarstarstars", null);
 
         try {
-            assertNotNull(track.getTrackFile());
+            assertNull(track.getTrackFile());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -249,11 +265,10 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
         assertNotEquals(0, tracks.size());
 
         Track track = tracks.get(0);
-        youTubePlatform.download(track);
 
         assertNotNull(youTubePlatform.getThumbnailUrl(track));
     }
@@ -263,11 +278,10 @@ class YouTubePlatformTest {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url);
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
         assertNotEquals(0, tracks.size());
 
         Track track = tracks.get(0);
-        youTubePlatform.download(track);
 
         assertNotNull(youTubePlatform.getImageUrl(track));
     }

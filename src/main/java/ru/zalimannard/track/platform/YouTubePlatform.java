@@ -1,24 +1,26 @@
 package ru.zalimannard.track.platform;
 
 import ru.zalimannard.track.Track;
-import ru.zalimannard.track.TrackInfo;
 
 import java.util.ArrayList;
 
+/**
+ * The type YouTube platform.
+ */
 public class YouTubePlatform implements Platform{
     @Override
     public Boolean isFromThisPlatform(String url) {
-        return null;
+        return false;
     }
 
     @Override
-    public ArrayList<TrackInfo> search() {
-        return null;
+    public ArrayList<Track> search(String request) {
+        return new ArrayList<>();
     }
 
     @Override
-    public ArrayList<Track> getTracksByUrl() {
-        return null;
+    public ArrayList<Track> getTracksByUrl(String url) {
+        return new ArrayList<>();
     }
 
     @Override

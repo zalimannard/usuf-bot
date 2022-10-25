@@ -115,7 +115,12 @@ public class YouTubePlatform implements Platform {
         if (isPlaylist(url)) {
             System.out.println(id);
             RequestPlaylistInfo requestPlaylistInfo = new RequestPlaylistInfo(id);
-            Response<PlaylistInfo> response = youtubeDownloader.getPlaylistInfo(requestPlaylistInfo);
+            Response<PlaylistInfo> response;
+            try {
+                response = youtubeDownloader.getPlaylistInfo(requestPlaylistInfo);
+            } catch (NullPointerException e) {
+                return tracks;
+            }
             PlaylistInfo playlistInfo = response.data();
             List<PlaylistVideoDetails> videos;
             try {

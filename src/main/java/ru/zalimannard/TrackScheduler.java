@@ -5,8 +5,6 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import net.dv8tion.jda.api.entities.Guild;
 import ru.zalimannard.track.Track;
 
-import java.util.LinkedList;
-
 /**
  * The TrackScheduler class will be responsible for the order of playback.
  */
@@ -23,6 +21,15 @@ public class TrackScheduler extends AudioEventAdapter {
     public TrackScheduler(AudioPlayer player, Guild guild) {
         mPlayer = player;
         mGuild = guild;
+    }
+
+    /**
+     * Insert a new track to the end of the playlist.
+     *
+     * @param track  the track to insert
+     */
+    public void insert(Track track) {
+
     }
 
     /**
@@ -58,7 +65,7 @@ public class TrackScheduler extends AudioEventAdapter {
      *
      * @return the current track
      */
-    public Track getCurrentTrack() {
+    public Track getTrack() {
         return null;
     }
 

@@ -40,12 +40,18 @@ public abstract class Command {
     }
 
     /**
-     * Is this command boolean.
+     * Is this command string.
      *
-     * @param text the text to check
+     * @param text the text
      * @return null if the string does not belong to the command. Otherwise, it is a variant of the command in the current case
      */
     public String isThisCommand(String text) {
+        String trimmedText = text.trim();
+        for (String commandName : getNames()) {
+            if (trimmedText.startsWith(commandName)) {
+                return commandName;
+            }
+        }
         return null;
     }
 

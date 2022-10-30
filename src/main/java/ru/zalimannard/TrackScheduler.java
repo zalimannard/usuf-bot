@@ -3,9 +3,11 @@ package ru.zalimannard;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.Guild;
 import ru.zalimannard.track.Track;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 /**
@@ -36,7 +38,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void insert(Track track) {
         playlist.add(track);
         if (playlist.size() == 1) {
-            // TODO Start playing
+            play(1);
         }
     }
 
@@ -49,11 +51,10 @@ public class TrackScheduler extends AudioEventAdapter {
     public void insert(int number, Track track) {
         if ((number >= 0) && (number <= playlist.size())) {
             playlist.add(number, track);
-            if ((number < currentTrackNumber) || (playlist.size() == 1)) {
+            if (number < currentTrackNumber) {
                 ++currentTrackNumber;
-            }
-            if (playlist.size() == 1) {
-                // TODO Start playing
+            } else if (playlist.size() == 1) {
+                play(1);
             }
         }
     }
@@ -65,8 +66,7 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public void jump(int number) {
         if ((number >= 1) && (number <= playlist.size())) {
-            currentTrackNumber = number;
-            // TODO Start playing
+            play(number);
         }
     }
 
@@ -78,14 +78,12 @@ public class TrackScheduler extends AudioEventAdapter {
     public void remove(int number) {
         if ((number >= 1) && (number <= playlist.size())) {
             playlist.remove(number - 1);
-            if (number < currentTrackNumber) {
-                --currentTrackNumber;
-            }
-            if (number == currentTrackNumber) {
-                // TODO Skip current track
-            }
             if (playlist.size() == 0) {
-                currentTrackNumber = 0;
+                play(0);
+            } else if (number == currentTrackNumber) {
+                play(number);
+            } else if (number < currentTrackNumber) {
+                --currentTrackNumber;
             }
         }
     }
@@ -115,6 +113,11 @@ public class TrackScheduler extends AudioEventAdapter {
         return null;
     }
 
+    /**
+     * Play.
+     *
+     * @param track the track
+     */
     public void play(AudioTrack track) {
         player.startTrack(track, true);
     }
@@ -135,5 +138,31 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public int getPlaylistSize() {
         return playlist.size();
+    }
+
+    @Override
+    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if (currentTrackNumber != playlist.size()) {
+            play(currentTrackNumber + 1);
+        } else {
+            play(0);
+        }
+    }
+
+    private void play(int number) {
+        // TODO Make it possible to run tests without changing the code
+        if ((number >= 1) && (number <= playlist.size())) {
+            currentTrackNumber = number;
+            try {
+                PlayerManagerManager.getInstance().getPlayerManager(guild.getId()).loadAndPlay(guild,
+                        playlist.get(number - 1).getTrackFile().getAbsolutePath());
+            } catch (IOException e) {
+                play(number + 1);
+            }
+        } else {
+            playlist.clear();
+            currentTrackNumber = 0;
+            guild.getAudioManager().closeAudioConnection();
+        }
     }
 }

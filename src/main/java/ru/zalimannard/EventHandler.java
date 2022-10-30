@@ -43,6 +43,13 @@ public class EventHandler extends ListenerAdapter {
                 PlayerManagerManager.getInstance().getMessageSender(event.getGuild().getId())
                         .setCurrentMessageChannel(event.getMessage().getChannel());
             }
+
+            messageText = messageText.substring(prefix.length());
+            Command command = CommandFactory.identifyCommand(messageText);
+            if (command != null) {
+                messageText = messageText.substring(command.isThisCommand(messageText).length());
+                command.execute(event.getMember(), messageText);
+            }
         }
     }
 

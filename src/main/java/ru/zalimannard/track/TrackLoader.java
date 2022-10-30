@@ -21,4 +21,13 @@ public class TrackLoader {
         }
         return null;
     }
+
+    public ArrayList<Track> getTracksByUrl(String url, String requesterId) {
+        for (Platform platform : platforms) {
+            if (platform.isFromThisPlatform(url)) {
+                return platform.getTracksByUrl(url, requesterId);
+            }
+        }
+        return new ArrayList<>();
+    }
 }

@@ -1,10 +1,13 @@
 package ru.zalimannard.command;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import ru.zalimannard.MessageSender;
 import ru.zalimannard.PlayerManagerManager;
+import ru.zalimannard.TrackScheduler;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 /**
  * The type Command.
@@ -43,19 +46,32 @@ public abstract class Command {
             switch (requirements.get(i)) {
                 case BOT_IN_THE_VOICE_CHANNEL:
                     if (!member.getGuild().getAudioManager().isConnected()) {
-                        getMessageSender(member.getGuild().getId())
+                        getMessageSender(member.getGuild())
                                 .sendError("Бот должен быть в голосовом канале");
                         return;
                     }
                     break;
                 case REQUESTER_IN_THE_VOICE_CHANNEL:
                     if (!member.getVoiceState().inAudioChannel()) {
-                        getMessageSender(member.getGuild().getId())
+                        getMessageSender(member.getGuild())
                                 .sendError("Команду можно вызвать только из голосового канала");
                         return;
                     }
                     break;
             }
+        }
+
+        textArgument = textArgument.trim();
+        int wrongArgumentCount = 0;
+        for (Argument argument : getArguments()) {
+            if (!argument.getPattern().matcher(textArgument).matches()) {
+                ++wrongArgumentCount;
+            }
+        }
+        if (wrongArgumentCount == getArguments().size()) {
+            getMessageSender(member.getGuild())
+                    .sendError("Неверные аргументы");
+            return;
         }
         onExecute(member, textArgument);
     }
@@ -123,10 +139,21 @@ public abstract class Command {
     /**
      * Gets message sender.
      *
-     * @param guildId the guild id
+     * @param guild the guild
      * @return the message sender
      */
-    protected MessageSender getMessageSender(String guildId) {
-        return PlayerManagerManager.getInstance().getMessageSender(guildId);
+    protected MessageSender getMessageSender(Guild guild) {
+        return PlayerManagerManager.getInstance().getMessageSender(guild.getId());
+    }
+
+    /**
+     * Gets track scheduler.
+     *
+     * @param guild the guild
+     * @return the track scheduler
+     */
+    protected TrackScheduler getTrackScheduler(Guild guild) {
+        return PlayerManagerManager.getInstance()
+                .getPlayerManager(guild.getId()).getMusicManager(guild).getScheduler();
     }
 }

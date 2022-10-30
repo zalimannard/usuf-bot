@@ -5,12 +5,16 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import net.dv8tion.jda.api.entities.Guild;
 import ru.zalimannard.track.Track;
 
+import java.util.LinkedList;
+
 /**
  * The TrackScheduler class will be responsible for the order of playback.
  */
 public class TrackScheduler extends AudioEventAdapter {
-    private final AudioPlayer mPlayer;
-    private final Guild mGuild;
+    private LinkedList<Track> playlist = new LinkedList<>();
+    private int currentTrackNumber = 0;
+    private final AudioPlayer player;
+    private final Guild guild;
 
     /**
      * Instantiates a new Track scheduler.
@@ -19,8 +23,8 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param guild  the guild
      */
     public TrackScheduler(AudioPlayer player, Guild guild) {
-        mPlayer = player;
-        mGuild = guild;
+        this.player = player;
+        this.guild = guild;
     }
 
     /**
@@ -29,7 +33,10 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param track  the track to insert
      */
     public void insert(Track track) {
-
+        playlist.add(track);
+        if (playlist.size() == 1) {
+            // TODO Start playing
+        }
     }
 
     /**
@@ -39,7 +46,15 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param track  the track to insert
      */
     public void insert(int number, Track track) {
-
+        if ((number >= 0) && (number <= playlist.size())) {
+            playlist.add(number, track);
+            if ((number < currentTrackNumber) || (playlist.size() == 1)) {
+                ++currentTrackNumber;
+            }
+            if (playlist.size() == 1) {
+                // TODO Start playing
+            }
+        }
     }
 
     /**
@@ -48,7 +63,10 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param number the number
      */
     public void jump(int number) {
-
+        if ((number >= 1) && (number <= playlist.size())) {
+            currentTrackNumber = number;
+            // TODO Start playing
+        }
     }
 
     /**
@@ -57,7 +75,18 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param number the number
      */
     public void remove(int number) {
-
+        if ((number >= 1) && (number <= playlist.size())) {
+            playlist.remove(number - 1);
+            if (number < currentTrackNumber) {
+                --currentTrackNumber;
+            }
+            if (number == currentTrackNumber) {
+                // TODO Skip current track
+            }
+            if (playlist.size() == 0) {
+                currentTrackNumber = 0;
+            }
+        }
     }
 
     /**
@@ -66,6 +95,9 @@ public class TrackScheduler extends AudioEventAdapter {
      * @return the current track
      */
     public Track getTrack() {
+        if (playlist.size() > 0) {
+            return playlist.get(currentTrackNumber - 1);
+        }
         return null;
     }
 
@@ -76,6 +108,9 @@ public class TrackScheduler extends AudioEventAdapter {
      * @return the track
      */
     public Track getTrack(int number) {
+        if ((number >= 1) && (number <= playlist.size())) {
+            return playlist.get(number - 1);
+        }
         return null;
     }
 
@@ -85,7 +120,7 @@ public class TrackScheduler extends AudioEventAdapter {
      * @return the current track number
      */
     public int getCurrentTrackNumber() {
-        return 0;
+        return currentTrackNumber;
     }
 
     /**
@@ -94,6 +129,6 @@ public class TrackScheduler extends AudioEventAdapter {
      * @return the playlist size
      */
     public int getPlaylistSize() {
-        return 0;
+        return playlist.size();
     }
 }

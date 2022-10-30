@@ -1,6 +1,8 @@
 package ru.zalimannard.command;
 
 import net.dv8tion.jda.api.entities.Member;
+import ru.zalimannard.MessageSender;
+import ru.zalimannard.PlayerManagerManager;
 
 import java.util.ArrayList;
 
@@ -40,8 +42,18 @@ public abstract class Command {
         for (int i = 0; i < requirements.size(); ++i) {
             switch (requirements.get(i)) {
                 case BOT_IN_THE_VOICE_CHANNEL:
+                    if (!member.getGuild().getAudioManager().isConnected()) {
+                        getMessageSender(member.getGuild().getId())
+                                .sendError("Бот должен быть в голосовом канале");
+                        return;
+                    }
                     break;
                 case REQUESTER_IN_THE_VOICE_CHANNEL:
+                    if (!member.getVoiceState().inAudioChannel()) {
+                        getMessageSender(member.getGuild().getId())
+                                .sendError("Команду можно вызвать только из голосового канала");
+                        return;
+                    }
                     break;
             }
         }
@@ -107,4 +119,14 @@ public abstract class Command {
      * @param textArgument the text argument
      */
     protected abstract void onExecute(Member member, String textArgument);
+
+    /**
+     * Gets message sender.
+     *
+     * @param guildId the guild id
+     * @return the message sender
+     */
+    protected MessageSender getMessageSender(String guildId) {
+        return PlayerManagerManager.getInstance().getMessageSender(guildId);
+    }
 }

@@ -38,7 +38,7 @@ public class PlayerManager {
         this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                // TODO Start playing track
+                musicManager.getScheduler().play(track);
             }
 
             @Override

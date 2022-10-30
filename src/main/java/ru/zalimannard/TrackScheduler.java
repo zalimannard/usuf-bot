@@ -2,6 +2,7 @@ package ru.zalimannard;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
 import ru.zalimannard.track.Track;
 
@@ -112,6 +113,10 @@ public class TrackScheduler extends AudioEventAdapter {
             return playlist.get(number - 1);
         }
         return null;
+    }
+
+    public void play(AudioTrack track) {
+        player.startTrack(track, true);
     }
 
     /**

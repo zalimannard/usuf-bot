@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class PlayerManagerManager {
     private static PlayerManagerManager INSTANCE;
-
     private Map<String, PlayerManager> managers = new HashMap<>();
+    private Map<String, MessageSender> senders = new HashMap<>();
 
     private PlayerManagerManager() {
 
@@ -24,5 +24,13 @@ public class PlayerManagerManager {
             managers.put(guildId, new PlayerManager());
         }
         return managers.get(guildId);
+    }
+
+    public void setMessageSender(String guildId, MessageSender messageSender) {
+        senders.put(guildId, messageSender);
+    }
+
+    public MessageSender getMessageSender(String guildId) {
+        return senders.get(guildId);
     }
 }

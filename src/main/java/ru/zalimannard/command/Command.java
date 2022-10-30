@@ -36,6 +36,15 @@ public abstract class Command {
      * @param textArgument the argument in the form of a single string
      */
     public void execute(Member member, String textArgument) {
+        ArrayList<Requirement> requirements = getRequirements();
+        for (int i = 0; i < requirements.size(); ++i) {
+            switch (requirements.get(i)) {
+                case BOT_IN_THE_VOICE_CHANNEL:
+                    break;
+                case REQUESTER_IN_THE_VOICE_CHANNEL:
+                    break;
+            }
+        }
         onExecute(member, textArgument);
     }
 

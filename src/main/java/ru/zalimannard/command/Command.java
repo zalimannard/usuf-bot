@@ -86,7 +86,13 @@ public abstract class Command {
         String trimmedText = text.trim();
         for (String commandName : getNames()) {
             if (trimmedText.startsWith(commandName)) {
-                return commandName;
+                if (commandName.length() != trimmedText.length()) {
+                    if (trimmedText.charAt(commandName.length()) == ' ') {
+                        return commandName;
+                    }
+                } else {
+                    return commandName;
+                }
             }
         }
         return null;

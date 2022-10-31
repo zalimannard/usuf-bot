@@ -13,6 +13,14 @@
 
 The music bot we used was blocked by YouTube. As a local alternative, I made this bot. The project is made for educational purposes, all actions you do at your own risk. Using a bot to listen to Youtube videos is contrary to the [Terms of Service - II. Prohibitions](https://developers.google.com/youtube/terms/api-services-terms-of-service).
 
+## :black_nib: Commands
+
+| Name | Arguments | Description |
+| - | - | - |
+| `play` | `URL` | Add a track/playlist to the end of the queue using the link |
+| `clear` |  | Clear the queue |
+| `help` |  | Show the help menu |
+
 ## :computer: Start
 
 ### Build and run from source
@@ -20,9 +28,9 @@ The music bot we used was blocked by YouTube. As a local alternative, I made thi
 ```shell
 git clone https://github.com/zalimannard/usuf-bot.git
 cd usuf-bot
-gradle build
+gradle build -x test
 cd build/libs
-java -jar usuf-bot-0.0.1.jar INSERT_YOUR_PREFIX_HERE INSERT_YOUR_TOKEN_HERE
+java -jar usuf-bot.jar INSERT_YOUR_PREFIX_HERE INSERT_YOUR_TOKEN_HERE
 ```
 
 ### Don't you have a token? Get it now!
@@ -56,6 +64,15 @@ and open the file `./build/docs/javadoc/index.html`
 ## :syringe: Dependencies
 
 - [JDA](https://github.com/DV8FromTheWorld/JDA) - to create a discord bot
+- [lavaplayer](https://github.com/sedmelluq/lavaplayer) - to work with audio files
+
+- [java-youtube-downloader](https://github.com/sealedtx/java-youtube-downloader) - to work with YouTube
+
+## :pager: Supported platforms
+
+- YouTube
+
+Adding new platforms is very simple. You need to take a library for it and make a wrapper. That is, to implement the Platform interface. If you want, you can do it yourself, or find a library for me and send an Issue.
 
 ## :dancers: Contributing
 

@@ -53,6 +53,17 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
     }
 
+
+    /**
+     * Send help.
+     */
+    public void sendHelp() {
+        EmbedBuilder trackAddedEmbed = new EmbedBuilder();
+        trackAddedEmbed.setColor(goodColor);
+        trackAddedEmbed.setTitle("Помощь");
+        getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
+    }
+
     /**
      * Gets current message channel.
      *

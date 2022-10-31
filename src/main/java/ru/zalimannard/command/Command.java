@@ -42,8 +42,8 @@ public abstract class Command {
      */
     public void execute(Member member, String textArgument) {
         ArrayList<Requirement> requirements = getRequirements();
-        for (int i = 0; i < requirements.size(); ++i) {
-            switch (requirements.get(i)) {
+        for (Requirement requirement : requirements) {
+            switch (requirement) {
                 case REQUESTER_IN_THE_VOICE_CHANNEL:
                     if (!member.getVoiceState().inAudioChannel()) {
                         getMessageSender(member.getGuild())

@@ -44,17 +44,17 @@ public abstract class Command {
         ArrayList<Requirement> requirements = getRequirements();
         for (int i = 0; i < requirements.size(); ++i) {
             switch (requirements.get(i)) {
-                case BOT_IN_THE_VOICE_CHANNEL:
-                    if (!member.getGuild().getAudioManager().isConnected()) {
-                        getMessageSender(member.getGuild())
-                                .sendError("Бот должен быть в голосовом канале");
-                        return;
-                    }
-                    break;
                 case REQUESTER_IN_THE_VOICE_CHANNEL:
                     if (!member.getVoiceState().inAudioChannel()) {
                         getMessageSender(member.getGuild())
                                 .sendError("Команду можно вызвать только из голосового канала");
+                        return;
+                    }
+                    break;
+                case BOT_IN_THE_VOICE_CHANNEL:
+                    if (!member.getGuild().getAudioManager().isConnected()) {
+                        getMessageSender(member.getGuild())
+                                .sendError("Бот должен быть в голосовом канале");
                         return;
                     }
                     break;

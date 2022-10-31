@@ -5,11 +5,11 @@ package ru.zalimannard.command;
  */
 public enum Requirement {
     /**
-     * Bot in the voice channel requirement.
-     */
-    BOT_IN_THE_VOICE_CHANNEL,
-    /**
      * Requester in the voice channel requirement.
      */
-    REQUESTER_IN_THE_VOICE_CHANNEL
+    REQUESTER_IN_THE_VOICE_CHANNEL,
+    /**
+     * Bot in the voice channel requirement.
+     */
+    BOT_IN_THE_VOICE_CHANNEL
 }

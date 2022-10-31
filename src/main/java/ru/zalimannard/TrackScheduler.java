@@ -18,6 +18,8 @@ public class TrackScheduler extends AudioEventAdapter {
     private int currentTrackNumber = 0;
     private final AudioPlayer player;
     private final Guild guild;
+    private boolean isTrackLooped = false;
+    private boolean isQueueLooped = false;
 
     /**
      * Instantiates a new Track scheduler.
@@ -33,7 +35,7 @@ public class TrackScheduler extends AudioEventAdapter {
     /**
      * Insert a new track to the end of the playlist.
      *
-     * @param track  the track to insert
+     * @param track the track to insert
      */
     public void insert(Track track) {
         playlist.add(track);
@@ -140,9 +142,49 @@ public class TrackScheduler extends AudioEventAdapter {
         return playlist.size();
     }
 
+    /**
+     * Is track looped boolean.
+     *
+     * @return true if the track is looped. Otherwise - false
+     */
+    public boolean isTrackLooped() {
+        return isTrackLooped;
+    }
+
+    /**
+     * Sets track looped.
+     *
+     * @param trackLooped the track looped
+     */
+    public void setTrackLooped(boolean trackLooped) {
+        isTrackLooped = trackLooped;
+    }
+
+    /**
+     * Is queue looped boolean.
+     *
+     * @return true if the queue is looped. Otherwise - false
+     */
+    public boolean isQueueLooped() {
+        return isQueueLooped;
+    }
+
+    /**
+     * Sets queue looped.
+     *
+     * @param queueLooped the queue looped
+     */
+    public void setQueueLooped(boolean queueLooped) {
+        isQueueLooped = queueLooped;
+    }
+
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (currentTrackNumber != playlist.size()) {
+        if (isTrackLooped) {
+            play(currentTrackNumber);
+        } else if ((isQueueLooped) && (currentTrackNumber == playlist.size())) {
+            play(1);
+        } else if (currentTrackNumber != playlist.size()) {
             play(currentTrackNumber + 1);
         } else {
             play(0);
@@ -162,6 +204,8 @@ public class TrackScheduler extends AudioEventAdapter {
         } else {
             playlist.clear();
             currentTrackNumber = 0;
+            isTrackLooped = false;
+            isQueueLooped = false;
             guild.getAudioManager().closeAudioConnection();
         }
     }

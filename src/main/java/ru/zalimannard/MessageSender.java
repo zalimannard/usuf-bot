@@ -7,6 +7,7 @@ import ru.zalimannard.command.Command;
 import ru.zalimannard.command.CommandFactory;
 import ru.zalimannard.command.commands.Clear;
 import ru.zalimannard.command.commands.Help;
+import ru.zalimannard.command.commands.Loop;
 import ru.zalimannard.command.commands.Play;
 
 import java.awt.*;
@@ -66,7 +67,7 @@ public class MessageSender {
      */
     public void sendHelp() {
         ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
-                new Play(), new Clear(), new Help()
+                new Play(), new Clear(), new Loop(), new Help()
         ));
         EmbedBuilder helpEmbed = new EmbedBuilder();
         helpEmbed.setColor(goodColor);

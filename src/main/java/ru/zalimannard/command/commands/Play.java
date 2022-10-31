@@ -25,7 +25,7 @@ public class Play extends Command {
                 new ArrayList<>(Arrays.asList("play", "p")),
                 new ArrayList<>(Arrays.asList(
                         new Argument(
-                                "Url",
+                                "URL",
                                 Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
                         )
                 )),

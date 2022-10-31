@@ -27,7 +27,7 @@ public class Clear extends Command {
                                 Pattern.compile(" *")
                         )
                 )),
-                "Добавить трек(и) в конец очереди",
+                "Очистить очередь",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL,
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL

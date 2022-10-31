@@ -50,7 +50,7 @@ public class Play extends Command {
                 getTrackScheduler(member.getGuild()).insert(tracksToAdd.get(0));
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } else {
-                getMessageSender(member.getGuild()).sendMessage("Добавлено" + tracksToAdd.size() + "трека(ов)");
+                getMessageSender(member.getGuild()).sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
                 for (Track trackToAdd : tracksToAdd) {
                     getTrackScheduler(member.getGuild()).insert(trackToAdd);
                 }

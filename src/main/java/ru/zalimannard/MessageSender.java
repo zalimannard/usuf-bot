@@ -3,8 +3,15 @@ package ru.zalimannard;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import ru.zalimannard.command.Command;
+import ru.zalimannard.command.CommandFactory;
+import ru.zalimannard.command.commands.Clear;
+import ru.zalimannard.command.commands.Help;
+import ru.zalimannard.command.commands.Play;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The type Message sender.
@@ -58,10 +65,31 @@ public class MessageSender {
      * Send help.
      */
     public void sendHelp() {
-        EmbedBuilder trackAddedEmbed = new EmbedBuilder();
-        trackAddedEmbed.setColor(goodColor);
-        trackAddedEmbed.setTitle("Помощь");
-        getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
+        ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
+                new Play(), new Clear(), new Help()
+        ));
+        EmbedBuilder helpEmbed = new EmbedBuilder();
+        helpEmbed.setColor(goodColor);
+        helpEmbed.setTitle("Команды:");
+        for (Command command : commands) {
+            String names = commandPrefix + command.getNames().get(0);
+            for (int i = 1; i < command.getNames().size(); ++i) {
+                names += " [" + commandPrefix + command.getNames().get(i) + "]";
+            }
+            String arguments = "";
+            if (command.getArguments().size() == 1) {
+                if (!command.getArguments().get(0).getText().equals(" ")) {
+                    arguments = "(" + command.getArguments().get(0).getText() + ")";
+                }
+            } else {
+                arguments = "(" + command.getArguments().get(0).getText() + ")";
+                for (int i = 1; i < command.getArguments().size(); ++i) {
+                    names += " / (" + command.getArguments().get(i) + ")";
+                }
+            }
+            helpEmbed.addField(names + " " + arguments, command.getDescription(), false);
+        }
+        getCurrentMessageChannel().sendMessageEmbeds(helpEmbed.build()).submit();
     }
 
     /**

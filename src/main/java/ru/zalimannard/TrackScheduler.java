@@ -68,7 +68,11 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public void jump(int number) {
         if ((number >= 1) && (number <= playlist.size())) {
-            play(number);
+            currentTrackNumber = number;
+            if (!isTrackLooped) {
+                --number;
+            }
+            finishTrack();
         }
     }
 
@@ -80,12 +84,11 @@ public class TrackScheduler extends AudioEventAdapter {
     public void remove(int number) {
         if ((number >= 1) && (number <= playlist.size())) {
             playlist.remove(number - 1);
-            if (playlist.size() == 0) {
-                play(0);
-            } else if (number == currentTrackNumber) {
-                play(number);
-            } else if (number < currentTrackNumber) {
+            if (number <= currentTrackNumber) {
                 --currentTrackNumber;
+            }
+            if (number == currentTrackNumber) {
+                finishTrack();
             }
         }
     }
@@ -192,12 +195,11 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     private void play(int number) {
-        // TODO Make it possible to run tests without changing the code
         if ((number >= 1) && (number <= playlist.size())) {
             currentTrackNumber = number;
             try {
                 PlayerManagerManager.getInstance().getPlayerManager(guild.getId()).loadAndPlay(guild,
-                        playlist.get(number - 1).getTrackFile().getAbsolutePath());
+                        playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
             } catch (IOException e) {
                 play(number + 1);
             }
@@ -208,5 +210,28 @@ public class TrackScheduler extends AudioEventAdapter {
             isQueueLooped = false;
             guild.getAudioManager().closeAudioConnection();
         }
+    }
+
+    /**
+     * Gets current track time position.
+     *
+     * @return the current track time position
+     */
+    public Time getCurrentTrackTimePosition() {
+        return new Time(player.getPlayingTrack().getPosition());
+    }
+
+    /**
+     * Sets current track time position.
+     *
+     * @param time the time
+     */
+    public void setCurrentTrackTimePosition(Time time) {
+        player.getPlayingTrack().setPosition(time.getMilliseconds());
+    }
+
+    private void finishTrack() {
+        long currentTrackDurationMs = player.getPlayingTrack().getDuration();
+        setCurrentTrackTimePosition(new Time(currentTrackDurationMs - 1));
     }
 }

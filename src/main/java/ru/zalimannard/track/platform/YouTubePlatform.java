@@ -113,7 +113,6 @@ public class YouTubePlatform implements Platform {
 
         String id = urlToId(url);
         if (isPlaylist(url)) {
-            System.out.println(id);
             RequestPlaylistInfo requestPlaylistInfo = new RequestPlaylistInfo(id);
             Response<PlaylistInfo> response;
             try {

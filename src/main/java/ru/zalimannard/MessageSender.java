@@ -82,7 +82,7 @@ public class MessageSender {
             } else {
                 arguments = "(" + command.getArguments().get(0).getText() + ")";
                 for (int i = 1; i < command.getArguments().size(); ++i) {
-                    names += " / (" + command.getArguments().get(i) + ")";
+                    arguments += " / (" + command.getArguments().get(i).getText() + ")";
                 }
             }
             helpEmbed.addField(names + " " + arguments, command.getDescription(), false);

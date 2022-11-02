@@ -7,7 +7,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.Guild;
 import ru.zalimannard.track.Track;
 
-import java.io.IOException;
 import java.util.LinkedList;
 
 /**
@@ -198,12 +197,8 @@ public class TrackScheduler extends AudioEventAdapter {
         System.out.println("number: " + number);
         if ((number >= 1) && (number <= playlist.size())) {
             currentTrackNumber = number;
-            try {
-                PlayerManagerManager.getInstance().getPlayerManager(guild.getId()).loadAndPlay(guild,
-                        playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
-            } catch (IOException e) {
-                play(number + 1);
-            }
+            PlayerManagerManager.getInstance().getPlayerManager(guild.getId()).loadAndPlay(guild,
+                    playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
         } else {
             playlist.clear();
             currentTrackNumber = 0;

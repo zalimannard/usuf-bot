@@ -1,18 +1,16 @@
 package ru.zalimannard.track;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.zalimannard.Time;
-import ru.zalimannard.track.platform.Platform;
-import ru.zalimannard.track.platform.YouTubePlatform;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 
 /**
- * The type Track.
+ * The class responsible for storing track data. It is used instead of
+ * AudioTrack from lavaplayer, because downloading tracks is implemented.
+ * AudioTrack doesn't work well enough.
  */
 public class Track {
     private final String title;
@@ -20,88 +18,93 @@ public class Track {
     private final Time duration;
     private final String url;
     private final String requesterId;
-    private File directory;
     private File trackFile;
+    private static final Logger LOGGER = LogManager.getRootLogger();
 
     /**
-     * Instantiates a new Track.
+     * Create an instance of the Track class with all informative parameters.
      *
-     * @param title       the title
-     * @param author      the author
-     * @param duration    the duration
-     * @param url         the url
-     * @param requesterId the requester id
+     * @param title       the title of the track
+     * @param author      the title of the track
+     * @param duration    the duration of the track
+     * @param url         the url of the track
+     * @param requesterId id of the requester who ordered the track
      */
-    public Track(String title, String author, Time duration, String url, String requesterId) {
+    public Track(String title, String author, Time duration, String url,
+                 String requesterId) {
         this.title = title;
         this.author = author;
         this.duration = duration;
         this.url = url;
         this.requesterId = requesterId;
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        directory.delete();
-        trackFile.delete();
+        LOGGER.trace("Object " + toString() + " has been created");
     }
 
     /**
-     * Gets requester id.
+     * Get id of the requester who ordered the track.
      *
-     * @return the requester id
+     * @return id of the requester who ordered the track
      */
     public String getRequesterId() {
         return requesterId;
     }
 
     /**
-     * Gets track file.
+     * Get the video/audio file of the downloaded track.
      *
      * @return the track file. This file is downloaded beforehand. If downloading is not possible, null is returned
-     * @throws IOException the io exception
      */
-    public File getTrackFile() throws IOException {
-        if (trackFile == null) {
-            directory = Files.createTempDirectory("Video").toFile();
-            TrackLoader trackLoader = new TrackLoader();
-            trackFile = trackLoader.download(this, directory);
+    public File getTrackFile() {
+        TrackLoader trackLoader = new TrackLoader();
+        trackLoader.download(this);
+        if (trackFile != null) {
+            LOGGER.debug("The track " + toString() + " file has been downloaded");
+        } else {
+            LOGGER.warn("The track " + toString() + " file hasn't been downloaded");
         }
         return trackFile;
     }
 
     /**
-     * Gets title.
+     * Set a file for the current track
      *
-     * @return the title
+     * @param trackFile the file for the current track
+     */
+    public void setTrackFile(File trackFile) {
+        this.trackFile = trackFile;
+    }
+
+    /**
+     * Get title of the track.
+     *
+     * @return the title of the track
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Gets author.
+     * Get author of the track.
      *
-     * @return the author
+     * @return the author of the track
      */
     public String getAuthor() {
         return author;
     }
 
     /**
-     * Gets duration.
+     * Get duration of the track.
      *
-     * @return the duration
+     * @return the duration of the track
      */
     public Time getDuration() {
         return duration;
     }
 
     /**
-     * Gets url.
+     * Get url of the track.
      *
-     * @return the url
+     * @return the url of the track
      */
     public String getUrl() {
         return url;
@@ -127,7 +130,6 @@ public class Track {
                 ", author='" + author + '\'' +
                 ", duration=" + duration +
                 ", url='" + url + '\'' +
-                ", directory=" + directory +
                 ", requesterId='" + requesterId + '\'' +
                 ", trackFile=" + trackFile +
                 '}';

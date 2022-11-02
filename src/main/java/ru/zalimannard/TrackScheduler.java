@@ -82,6 +82,9 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public void remove(int number) {
         if ((number >= 1) && (number <= playlist.size())) {
+            if (playlist.get(number - 1).isDownloaded()) {
+                playlist.get(number - 1).getTrackFile().delete();
+            }
             playlist.remove(number - 1);
             if (number <= currentTrackNumber) {
                 --currentTrackNumber;
@@ -200,7 +203,9 @@ public class TrackScheduler extends AudioEventAdapter {
             PlayerManagerManager.getInstance().getPlayerManager(guild.getId()).loadAndPlay(guild,
                     playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
         } else {
-            playlist.clear();
+            for (int i = playlist.size(); i >= 1; --i) {
+                remove(i);
+            }
             currentTrackNumber = 0;
             isTrackLooped = false;
             isQueueLooped = false;

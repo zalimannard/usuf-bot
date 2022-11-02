@@ -41,6 +41,15 @@ public class Track {
     }
 
     /**
+     * Check if the track file is downloaded.
+     *
+     * @return true if the file is downloaded. Otherwise false
+     */
+    public boolean isDownloaded() {
+        return trackFile != null;
+    }
+
+    /**
      * Get id of the requester who ordered the track.
      *
      * @return id of the requester who ordered the track
@@ -55,8 +64,10 @@ public class Track {
      * @return the track file. This file is downloaded beforehand. If downloading is not possible, null is returned
      */
     public File getTrackFile() {
-        TrackLoader trackLoader = new TrackLoader();
-        trackLoader.download(this);
+        if (!isDownloaded()) {
+            TrackLoader trackLoader = new TrackLoader();
+            trackLoader.download(this);
+        }
         if (trackFile != null) {
             LOGGER.debug("The track " + toString() + " file has been downloaded");
         } else {

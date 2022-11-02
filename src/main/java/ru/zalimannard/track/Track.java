@@ -8,9 +8,8 @@ import java.io.File;
 import java.util.Objects;
 
 /**
- * The class responsible for storing track data. It is used instead of
- * AudioTrack from lavaplayer, because downloading tracks is implemented.
- * AudioTrack doesn't work well enough.
+ * The class responsible for storing track data. It is used instead of AudioTrack from lavaplayer, because downloading
+ * tracks is implemented. AudioTrack doesn't work well enough.
  */
 public class Track {
     private final String title;
@@ -47,15 +46,6 @@ public class Track {
      */
     public boolean isDownloaded() {
         return trackFile != null;
-    }
-
-    /**
-     * Get id of the requester who ordered the track.
-     *
-     * @return id of the requester who ordered the track
-     */
-    public String getRequesterId() {
-        return requesterId;
     }
 
     /**
@@ -119,6 +109,15 @@ public class Track {
      */
     public String getUrl() {
         return url;
+    }
+
+    /**
+     * Get id of the requester who ordered the track.
+     *
+     * @return id of the requester who ordered the track
+     */
+    public String getRequesterId() {
+        return requesterId;
     }
 
     @Override

@@ -3,7 +3,6 @@ package ru.zalimannard.track.platform;
 import org.junit.jupiter.api.Test;
 import ru.zalimannard.track.Track;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,11 +66,11 @@ class YouTubePlatformTest {
     }
 
     @Test
-    void isFromThisPlatform_httpYoutuDotBeUrl_false() {
+    void isFromThisPlatform_httpYoutuDotBeUrl_true() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String incorrectVideoUrl = "http://youtube.com/watch?v=I8iYWNs_Tik";
 
-        assertFalse(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
+        assertTrue(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
     }
 
     @Test
@@ -242,22 +241,14 @@ class YouTubePlatformTest {
 
         Track track = tracks.get(0);
 
-        try {
-            assertNotNull(track.getTrackFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        assertNotNull(track.getTrackFile());
     }
 
     @Test
     void download_notAvailableForDownloadVideo_nullVideoFile() {
         Track track = new Track(null, null, null, "https://youtube.com/watch?v=I8iYWNs_Tikarstarstars", null);
 
-        try {
-            assertNull(track.getTrackFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        assertNull(track.getTrackFile());
     }
 
     @Test

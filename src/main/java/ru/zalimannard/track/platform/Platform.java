@@ -2,7 +2,6 @@ package ru.zalimannard.track.platform;
 
 import ru.zalimannard.track.Track;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +14,7 @@ public interface Platform {
      * @param url the url
      * @return true if the video is from this platform, otherwise false
      */
-    Boolean isFromThisPlatform(String url);
+    boolean isFromThisPlatform(String url);
 
     /**
      * Requests videos from the platform
@@ -38,7 +37,7 @@ public interface Platform {
      *
      * @param track to download
      */
-    File download(Track track, File directory);
+    void download(Track track);
 
     /**
      * Gets a link to a small preview of the video

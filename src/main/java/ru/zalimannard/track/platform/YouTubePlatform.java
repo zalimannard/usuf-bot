@@ -17,28 +17,28 @@ import com.github.kiulian.downloader.model.videos.formats.Format;
 import ru.zalimannard.Time;
 import ru.zalimannard.track.Track;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
- * The type YouTube platform.
+ * The class responsible for implementing the Platform interface for YouTube.
  */
 public class YouTubePlatform implements Platform {
-    private final YoutubeDownloader youtubeDownloader = new YoutubeDownloader();
-    private final ArrayList<String> prefixes = new ArrayList<>(Arrays.asList(
-            "https://www.youtube.com/",
-            "https://youtu.be/",
-            "https://youtube.com/"
+    private final static ArrayList<String> PROTOCOLS = new ArrayList<>(Arrays.asList(
+            "https://",
+            "http://"
     ));
-    private final ArrayList<String> secondLevelPrefixes = new ArrayList<>(Arrays.asList(
+    private final static ArrayList<String> ADDRESSES = new ArrayList<>(Arrays.asList(
+            "www.youtube.com/",
+            "youtu.be/",
+            "youtube.com/"
+    ));
+    private final static ArrayList<String> TYPES = new ArrayList<>(Arrays.asList(
             "watch?v=",
             "playlist?list="
     ));
-    private final ArrayList<String> postfixes = new ArrayList<>(Arrays.asList(
+    private final static ArrayList<String> PARAMETERS = new ArrayList<>(Arrays.asList(
             "&t=",
             "&list=",
             "&ab_channel=",
@@ -46,17 +46,23 @@ public class YouTubePlatform implements Platform {
             "?list=",
             "?ab_channel="
     ));
+    private final YoutubeDownloader youtubeDownloader = new YoutubeDownloader();
 
     public YouTubePlatform() {
     }
 
     @Override
-    public Boolean isFromThisPlatform(String url) {
+    public boolean isFromThisPlatform(String url) {
         if (url == null) {
             return false;
         }
-        for (String prefix : prefixes) {
-            if (url.startsWith(prefix)) {
+        for (String protocol : PROTOCOLS) {
+            if (url.startsWith(protocol)) {
+                url = url.substring(protocol.length());
+            }
+        }
+        for (String address : ADDRESSES) {
+            if (url.startsWith(address)) {
                 return true;
             }
         }
@@ -66,23 +72,17 @@ public class YouTubePlatform implements Platform {
     @Override
     public ArrayList<Track> search(String request) {
         ArrayList<Track> response = new ArrayList<>();
-
         if (request == null) {
             return response;
         }
-        Boolean isOnlySpace = true;
-        for (Integer i = 0; i < request.length(); ++i) {
-            if (request.charAt(i) != ' ') {
-                isOnlySpace = false;
-            }
-        }
-        if (isOnlySpace) {
+        if (request.trim().length() == 0) {
             return response;
         }
 
         RequestSearchResult requestToYoutube = new RequestSearchResult(request)
                 .type(TypeField.VIDEO)
-                .sortBy(SortField.RELEVANCE);
+                .sortBy(SortField.RELEVANCE)
+                .maxRetries(5);
         List<SearchResultVideoDetails> searchResultVideoDetails =
                 youtubeDownloader.search(requestToYoutube).data().videos();
 
@@ -102,8 +102,6 @@ public class YouTubePlatform implements Platform {
     @Override
     public ArrayList<Track> getTracksByUrl(String url, String requesterId) {
         ArrayList<Track> tracks = new ArrayList<>();
-        ArrayList<String> videoIds = new ArrayList<>();
-
         if (url == null) {
             return tracks;
         }
@@ -112,23 +110,31 @@ public class YouTubePlatform implements Platform {
         }
 
         String id = urlToId(url);
+        ArrayList<String> videoIds = new ArrayList<>();
         if (isPlaylist(url)) {
             RequestPlaylistInfo requestPlaylistInfo = new RequestPlaylistInfo(id);
+            // YouTube downloads playlists poorly. A NullPointerException appears. Therefore, we separately select and
+            // specify the number of attempts. The chance that the error will appear more than once in a row is very
+            // small.
             Response<PlaylistInfo> response;
-            try {
-                response = youtubeDownloader.getPlaylistInfo(requestPlaylistInfo);
-            } catch (NullPointerException e) {
-                return tracks;
-            }
-            PlaylistInfo playlistInfo = response.data();
+            PlaylistInfo playlistInfo;
             List<PlaylistVideoDetails> videos;
-            try {
-                 videos = playlistInfo.videos();
-            } catch (NullPointerException e) {
-                return tracks;
-            }
-            for (PlaylistVideoDetails video : videos) {
-                videoIds.add(video.videoId());
+            int nAttempt = 5;
+            for (int attempt = 1; attempt <= nAttempt; ++attempt) {
+                try {
+                    response = youtubeDownloader.getPlaylistInfo(requestPlaylistInfo);
+                    playlistInfo = response.data();
+                    videos = playlistInfo.videos();
+                    videoIds = new ArrayList<>();
+                    for (PlaylistVideoDetails video : videos) {
+                        videoIds.add(video.videoId());
+                    }
+                    break;
+                } catch (NullPointerException e) {
+                    if (attempt == nAttempt) {
+                        return tracks;
+                    }
+                }
             }
         } else {
             videoIds.add(id);
@@ -151,7 +157,7 @@ public class YouTubePlatform implements Platform {
     }
 
     @Override
-    public File download(Track track, File directory) {
+    public void download(Track track) {
         if (isFromThisPlatform(track.getUrl())) {
             VideoInfo videoInfo;
             videoInfo = getVideoInfo(urlToId(track.getUrl()));
@@ -159,19 +165,16 @@ public class YouTubePlatform implements Platform {
             try {
                 format = videoInfo.bestAudioFormat();
             } catch (NullPointerException e) {
-                return null;
+                return;
             }
             if (format == null) {
                 format = videoInfo.bestVideoWithAudioFormat();
             }
             if (format != null) {
-                RequestVideoFileDownload requestFile = new RequestVideoFileDownload(format)
-                        .saveTo(directory)
-                        .renameTo("video");
-                return youtubeDownloader.downloadVideoFile(requestFile).data();
+                RequestVideoFileDownload requestFile = new RequestVideoFileDownload(format);
+                track.setTrackFile(youtubeDownloader.downloadVideoFile(requestFile).data());
             }
         }
-        return null;
     }
 
     @Override
@@ -185,25 +188,30 @@ public class YouTubePlatform implements Platform {
     }
 
     private String urlToId(String url) {
-        for (String prefix : prefixes) {
-            if (url.contains(prefix)) {
-                url = url.substring(prefix.length());
+        for (String protocol : PROTOCOLS) {
+            if (url.contains(protocol)) {
+                url = url.substring(protocol.length());
             }
         }
-        for (String prefix : secondLevelPrefixes) {
-            if (url.contains(prefix)) {
-                url = url.substring(prefix.length());
+        for (String address : ADDRESSES) {
+            if (url.contains(address)) {
+                url = url.substring(address.length());
             }
         }
-        for (String postfix : postfixes) {
-            if (url.contains(postfix)) {
-                url = url.substring(0, url.indexOf(postfix));
+        for (String type : TYPES) {
+            if (url.contains(type)) {
+                url = url.substring(type.length());
+            }
+        }
+        for (String parameter : PARAMETERS) {
+            if (url.contains(parameter)) {
+                url = url.substring(0, url.indexOf(parameter));
             }
         }
         return url;
     }
 
-    public Boolean isDownloadable(String videoId) {
+    private boolean isDownloadable(String videoId) {
         try {
             VideoDetails videoDetails = getVideoInfo(urlToId("https://www.youtube.com/watch?v=" + videoId)).details();
             return videoDetails.isDownloadable() && !videoDetails.isLive();
@@ -219,7 +227,7 @@ public class YouTubePlatform implements Platform {
         return response.data();
     }
 
-    public Boolean isPlaylist(String url) {
+    private boolean isPlaylist(String url) {
         return url.contains("playlist");
     }
 }

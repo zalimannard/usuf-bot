@@ -5,52 +5,52 @@ import ru.zalimannard.track.Track;
 import java.util.ArrayList;
 
 /**
- * The interface Platform.
+ * Interface for interacting with various platforms hosting tracks.
  */
 public interface Platform {
     /**
      * Check that the video is from this platform.
      *
-     * @param url the url
-     * @return true if the video is from this platform, otherwise false
+     * @param url the url to check
+     * @return true if the prefix matches one of the platform prefixes, otherwise false
      */
     boolean isFromThisPlatform(String url);
 
     /**
-     * Requests videos from the platform
+     * Request in the platform search.
      *
      * @param request the request
-     * @return trackInfo list
+     * @return found tracks. If nothing is found, an empty list is returned.
      */
     ArrayList<Track> search(String request);
 
     /**
-     * Gets all tracks by the link. It can be either one or several.
+     * Get tracks by link. It can be either a single track or a playlist.
      *
-     * @param url the url
-     * @return track list
+     * @param url download url
+     * @return the list of tracks received by the link. If nothing is received, an empty list is returned
      */
     ArrayList<Track> getTracksByUrl(String url, String requesterId);
 
     /**
-     * Adds a file with the contents of the track to an already existing track.
+     * Download the file of the specified track.
      *
-     * @param track to download
+     * @param track to download the file for
      */
     void download(Track track);
 
     /**
-     * Gets a link to a small preview of the video
+     * Get a link to the video thumbnail
      *
-     * @param track the track
+     * @param track the track to get a thumbnail for
      * @return the thumbnail url
      */
     String getThumbnailUrl(Track track);
 
     /**
-     * Gets a link to the video preview
+     * Get a link to the video image
      *
-     * @param track the track
+     * @param track the track to get a image for
      * @return the image url
      */
     String getImageUrl(Track track);

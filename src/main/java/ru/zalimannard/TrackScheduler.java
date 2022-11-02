@@ -39,7 +39,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void insert(Track track) {
         playlist.add(track);
         if (playlist.size() == 1) {
-            jump(1);
+            play(1);
         }
     }
 

@@ -14,10 +14,10 @@ import java.util.LinkedList;
  * The TrackScheduler class will be responsible for the order of playback.
  */
 public class TrackScheduler extends AudioEventAdapter {
-    private LinkedList<Track> playlist = new LinkedList<>();
-    private int currentTrackNumber = 0;
     private final AudioPlayer player;
     private final Guild guild;
+    private final LinkedList<Track> playlist = new LinkedList<>();
+    private int currentTrackNumber = 0;
     private boolean isTrackLooped = false;
     private boolean isQueueLooped = false;
 
@@ -40,7 +40,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void insert(Track track) {
         playlist.add(track);
         if (playlist.size() == 1) {
-            play(1);
+            jump(1);
         }
     }
 
@@ -53,10 +53,10 @@ public class TrackScheduler extends AudioEventAdapter {
     public void insert(int number, Track track) {
         if ((number >= 0) && (number <= playlist.size())) {
             playlist.add(number, track);
-            if (number < currentTrackNumber) {
+            if (playlist.size() == 1) {
+                jump(1);
+            } else if (number < currentTrackNumber) {
                 ++currentTrackNumber;
-            } else if (playlist.size() == 1) {
-                play(1);
             }
         }
     }
@@ -195,6 +195,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     private void play(int number) {
+        System.out.println("number: " + number);
         if ((number >= 1) && (number <= playlist.size())) {
             currentTrackNumber = number;
             try {

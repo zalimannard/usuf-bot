@@ -64,7 +64,7 @@ public class MessageSender {
      */
     public void sendHelp() {
         ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
-                new Play(), new Skip(), new Loop(), new Loopq(), new Clear(), new Help()
+                new Play(), new Skip(), new Prev(), new Loop(), new Loopq(), new Clear(), new Help()
         ));
         EmbedBuilder helpEmbed = new EmbedBuilder();
         helpEmbed.setColor(goodColor);

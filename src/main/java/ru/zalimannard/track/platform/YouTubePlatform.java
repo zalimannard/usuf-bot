@@ -30,21 +30,15 @@ public class YouTubePlatform implements Platform {
             "http://"
     ));
     private final static ArrayList<String> ADDRESSES = new ArrayList<>(Arrays.asList(
-            "www.youtube.com/",
-            "youtu.be/",
-            "youtube.com/"
-    ));
-    private final static ArrayList<String> TYPES = new ArrayList<>(Arrays.asList(
-            "watch?v=",
-            "playlist?list="
-    ));
-    private final static ArrayList<String> PARAMETERS = new ArrayList<>(Arrays.asList(
-            "&t=",
-            "&list=",
-            "&ab_channel=",
-            "?t=",
-            "?list=",
-            "?ab_channel="
+            "www.youtube.com/watch?v=",
+            "youtube.com/watch?v=",
+            "www.youtube.com/playlist?list=",
+            "youtube.com/playlist?list=",
+            "youtu.be/"
+            ));
+    private final static ArrayList<String> PARAMETER_SEPARATOR = new ArrayList<>(Arrays.asList(
+            "&",
+            "?"
     ));
     private final YoutubeDownloader youtubeDownloader = new YoutubeDownloader();
 
@@ -179,15 +173,28 @@ public class YouTubePlatform implements Platform {
 
     @Override
     public String getThumbnailUrl(Track track) {
-        return "https://i.ytimg.com/vi/" + urlToId(track.getUrl()) + "/default.jpg";
+        if (track != null) {
+            if (isFromThisPlatform(track.getUrl())) {
+                return "https://i.ytimg.com/vi/" + urlToId(track.getUrl()) + "/default.jpg";
+            }
+        }
+        return null;
     }
 
     @Override
     public String getImageUrl(Track track) {
-        return "https://i.ytimg.com/vi/" + urlToId(track.getUrl()) + "/hqdefault.jpg";
+        if (track != null) {
+            if (isFromThisPlatform(track.getUrl())) {
+                return "https://i.ytimg.com/vi/" + urlToId(track.getUrl()) + "/hqdefault.jpg";
+            }
+        }
+        return null;
     }
 
     private String urlToId(String url) {
+        if (!isFromThisPlatform(url)) {
+            return "";
+        }
         for (String protocol : PROTOCOLS) {
             if (url.contains(protocol)) {
                 url = url.substring(protocol.length());
@@ -198,12 +205,7 @@ public class YouTubePlatform implements Platform {
                 url = url.substring(address.length());
             }
         }
-        for (String type : TYPES) {
-            if (url.contains(type)) {
-                url = url.substring(type.length());
-            }
-        }
-        for (String parameter : PARAMETERS) {
+        for (String parameter : PARAMETER_SEPARATOR) {
             if (url.contains(parameter)) {
                 url = url.substring(0, url.indexOf(parameter));
             }

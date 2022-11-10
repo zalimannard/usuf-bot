@@ -252,28 +252,48 @@ class YouTubePlatformTest {
     }
 
     @Test
-    void getThumbnailUrl_standardVideo_nonNullUrl() {
+    void getThumbnailUrl_standardVideo_correctUrl() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
-        assertNotEquals(0, tracks.size());
+        String thumbnailUrl = youTubePlatform.getThumbnailUrl(track);
 
-        Track track = tracks.get(0);
-
-        assertNotNull(youTubePlatform.getThumbnailUrl(track));
+        String correctThumbnailUrl = "https://i.ytimg.com/vi/I8iYWNs_Tik/default.jpg";
+        assertNotNull(correctThumbnailUrl, thumbnailUrl);
     }
 
     @Test
-    void getImageUrl_standardVideo_nonNullUrl() {
+    void getImageUrl_standardVideo_correctUrl() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
-        assertNotEquals(0, tracks.size());
+        String imageUrl = youTubePlatform.getImageUrl(track);
 
-        Track track = tracks.get(0);
+        String correctThumbnailUrl = "https://i.ytimg.com/vi/I8iYWNs_Tik/hqdefault.jpg";
+        assertNotNull(correctThumbnailUrl, imageUrl);
+    }
 
-        assertNotNull(youTubePlatform.getImageUrl(track));
+    @Test
+    void getThumbnailUrl_trackWithIncorrectUrl_null() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://youtube.com/watch?vI8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
+
+        String thumbnailUrl = youTubePlatform.getThumbnailUrl(track);
+
+        assertNull(thumbnailUrl);
+    }
+
+    @Test
+    void getImageUrl_standardVideo_null() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://youtube.com/watch?vI8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
+
+        String imageUrl = youTubePlatform.getImageUrl(track);
+
+        assertNull(imageUrl);
     }
 }

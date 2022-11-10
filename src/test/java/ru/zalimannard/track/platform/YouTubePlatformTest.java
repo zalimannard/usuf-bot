@@ -112,6 +112,16 @@ class YouTubePlatformTest {
     }
 
     @Test
+    void search_null_emptyList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String request = null;
+
+        ArrayList<Track> tracks = youTubePlatform.search(request);
+
+        assertEquals(0, tracks.size());
+    }
+
+    @Test
     void search_spaceString_emptyList() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String request = "    ";
@@ -231,6 +241,26 @@ class YouTubePlatformTest {
         assertEquals(0, tracks.size());
     }
 
+    @Test
+    void getTracksByUrl_incorrectUrl_emptyTrackList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://www.youtube.com/watch?=jfKfPfyJRdk";
+
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
+
+        assertEquals(0, tracks.size());
+    }
+
+
+    @Test
+    void getTracksByUrl_null_emptyTrackList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = null;
+
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
+
+        assertEquals(0, tracks.size());
+    }
     @Test
     void download_standardVideo_fileDownloaded() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();

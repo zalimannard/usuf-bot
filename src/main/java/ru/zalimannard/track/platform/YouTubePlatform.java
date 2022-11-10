@@ -192,9 +192,6 @@ public class YouTubePlatform implements Platform {
     }
 
     private String urlToId(String url) {
-        if (!isFromThisPlatform(url)) {
-            return "";
-        }
         for (String protocol : PROTOCOLS) {
             if (url.contains(protocol)) {
                 url = url.substring(protocol.length());

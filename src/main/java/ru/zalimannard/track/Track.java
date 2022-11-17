@@ -2,7 +2,7 @@ package ru.zalimannard.track;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.zalimannard.Time;
+import ru.zalimannard.Duration;
 
 import java.io.File;
 import java.util.Objects;
@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Track {
     private final String title;
     private final String author;
-    private final Time duration;
+    private final Duration duration;
     private final String url;
     private final String requesterId;
     private File trackFile;
@@ -29,7 +29,7 @@ public class Track {
      * @param url         the url of the track
      * @param requesterId id of the requester who ordered the track
      */
-    public Track(String title, String author, Time duration, String url,
+    public Track(String title, String author, Duration duration, String url,
                  String requesterId) {
         this.title = title;
         this.author = author;
@@ -98,7 +98,7 @@ public class Track {
      *
      * @return the duration of the track
      */
-    public Time getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 

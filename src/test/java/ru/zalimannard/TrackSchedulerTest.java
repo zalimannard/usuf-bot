@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrackSchedulerTest {
     TrackScheduler trackScheduler;
-    Track track = new Track("title", "author", new Time(10L), "https://youtube.com/watch?v=I8iYWNs_Tik", "requesterId");
+    Track track = new Track("title", "author", new Duration(10L), "https://youtube.com/watch?v=I8iYWNs_Tik", "requesterId");
     @BeforeEach
     void beforeEach() {
         trackScheduler = new TrackScheduler(null, null);

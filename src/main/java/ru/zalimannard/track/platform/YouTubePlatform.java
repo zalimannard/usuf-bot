@@ -14,7 +14,7 @@ import com.github.kiulian.downloader.model.search.field.TypeField;
 import com.github.kiulian.downloader.model.videos.VideoDetails;
 import com.github.kiulian.downloader.model.videos.VideoInfo;
 import com.github.kiulian.downloader.model.videos.formats.Format;
-import ru.zalimannard.Time;
+import ru.zalimannard.Duration;
 import ru.zalimannard.track.Track;
 
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class YouTubePlatform implements Platform {
             response.add(new Track(
                     searchResultVideoDetail.title(),
                     searchResultVideoDetail.author(),
-                    new Time(Long.valueOf(searchResultVideoDetails.get(0).lengthSeconds())),
+                    new Duration(Long.valueOf(searchResultVideoDetails.get(0).lengthSeconds())),
                     "https://www.youtube.com/watch?v=" + searchResultVideoDetails.get(0).videoId(),
                     ""
             ));
@@ -140,7 +140,7 @@ public class YouTubePlatform implements Platform {
                 tracks.add(new Track(
                         videoDetails.title(),
                         videoDetails.author(),
-                        new Time(Long.valueOf(videoDetails.lengthSeconds())),
+                        new Duration(Long.valueOf(videoDetails.lengthSeconds())),
                         "https://www.youtube.com/watch?v=" + videoId,
                         requesterId
                 ));

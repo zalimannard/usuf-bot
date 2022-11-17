@@ -218,21 +218,21 @@ public class TrackScheduler extends AudioEventAdapter {
      *
      * @return the current track time position
      */
-    public Time getCurrentTrackTimePosition() {
-        return new Time(player.getPlayingTrack().getPosition());
+    public Duration getCurrentTrackTimePosition() {
+        return new Duration(player.getPlayingTrack().getPosition());
     }
 
     /**
      * Sets current track time position.
      *
-     * @param time the time
+     * @param duration the time
      */
-    public void setCurrentTrackTimePosition(Time time) {
-        player.getPlayingTrack().setPosition(time.getMilliseconds());
+    public void setCurrentTrackTimePosition(Duration duration) {
+        player.getPlayingTrack().setPosition(duration.getMilliseconds());
     }
 
     private void finishTrack() {
         long currentTrackDurationMs = player.getPlayingTrack().getDuration();
-        setCurrentTrackTimePosition(new Time(currentTrackDurationMs - 1));
+        setCurrentTrackTimePosition(new Duration(currentTrackDurationMs - 1));
     }
 }

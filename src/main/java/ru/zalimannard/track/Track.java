@@ -20,15 +20,6 @@ public class Track {
     private File trackFile;
     private static final Logger LOGGER = LogManager.getRootLogger();
 
-    /**
-     * Create an instance of the Track class with all informative parameters.
-     *
-     * @param title       the title of the track
-     * @param author      the title of the track
-     * @param duration    the duration of the track
-     * @param url         the url of the track
-     * @param requesterId id of the requester who ordered the track
-     */
     public Track(String title, String author, Duration duration, String url,
                  String requesterId) {
         this.title = title;
@@ -39,11 +30,6 @@ public class Track {
         LOGGER.trace("Object " + toString() + " has been created");
     }
 
-    /**
-     * Check if the track file is downloaded.
-     *
-     * @return true if the file is downloaded. Otherwise false
-     */
     public boolean isDownloaded() {
         return trackFile != null;
     }
@@ -66,56 +52,26 @@ public class Track {
         return trackFile;
     }
 
-    /**
-     * Set a file for the current track
-     *
-     * @param trackFile the file for the current track
-     */
     public void setTrackFile(File trackFile) {
         this.trackFile = trackFile;
     }
 
-    /**
-     * Get title of the track.
-     *
-     * @return the title of the track
-     */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Get author of the track.
-     *
-     * @return the author of the track
-     */
     public String getAuthor() {
         return author;
     }
 
-    /**
-     * Get duration of the track.
-     *
-     * @return the duration of the track
-     */
     public Duration getDuration() {
         return duration;
     }
 
-    /**
-     * Get url of the track.
-     *
-     * @return the url of the track
-     */
     public String getUrl() {
         return url;
     }
 
-    /**
-     * Get id of the requester who ordered the track.
-     *
-     * @return id of the requester who ordered the track
-     */
     public String getRequesterId() {
         return requesterId;
     }

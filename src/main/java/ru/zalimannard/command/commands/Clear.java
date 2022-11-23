@@ -10,14 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/**
- * The command Clear.
- */
 public class Clear extends Command {
-
-    /**
-     * Instantiates a new Clear command.
-     */
     public Clear() {
         super(
                 new ArrayList<>(Arrays.asList("clear", "c")),

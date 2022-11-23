@@ -10,14 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/**
- * The command Prev.
- */
 public class Prev extends Command {
-
-    /**
-     * Instantiates a new Prev command.
-     */
     public Prev() {
         super(
                 new ArrayList<>(Arrays.asList("prev", "pr")),

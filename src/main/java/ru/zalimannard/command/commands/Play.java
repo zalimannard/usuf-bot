@@ -12,14 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/**
- * The command Play.
- */
 public class Play extends Command {
-
-    /**
-     * Instantiates a new Play command.
-     */
     public Play() {
         super(
                 new ArrayList<>(Arrays.asList("play", "p")),

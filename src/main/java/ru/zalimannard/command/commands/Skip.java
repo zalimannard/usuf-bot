@@ -10,14 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/**
- * The command Skip.
- */
 public class Skip extends Command {
-
-    /**
-     * Instantiates a new Skip command.
-     */
     public Skip() {
         super(
                 new ArrayList<>(Arrays.asList("skip", "s")),

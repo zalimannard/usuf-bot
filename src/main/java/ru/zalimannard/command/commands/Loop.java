@@ -10,14 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/**
- * The command Loop.
- */
 public class Loop extends Command {
-
-    /**
-     * Instantiates a new Loop command.
-     */
     public Loop() {
         super(
                 new ArrayList<>(Arrays.asList("loop", "l")),

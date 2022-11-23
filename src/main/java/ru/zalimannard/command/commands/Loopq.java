@@ -10,14 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/**
- * The command Loopq.
- */
 public class Loopq extends Command {
-
-    /**
-     * Instantiates a new Loopq command.
-     */
     public Loopq() {
         super(
                 new ArrayList<>(Arrays.asList("loopq", "lq")),

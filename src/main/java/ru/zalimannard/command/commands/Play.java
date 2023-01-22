@@ -19,7 +19,7 @@ public class Play extends Command {
                 new ArrayList<>(Arrays.asList(
                         new Argument(
                                 "URL",
-                                Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
+                                Pattern.compile("( *(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])+")
                         )
                 )),
                 "Добавить трек(и) в конец очереди",
@@ -34,15 +34,23 @@ public class Play extends Command {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
             AudioManager audioManager = member.getGuild().getAudioManager();
             TrackLoader trackLoader = new TrackLoader();
-            ArrayList<Track> tracksToAdd = trackLoader.getTracksByUrl(textArgument, member.getId());
-
+            String[] textArguments = textArgument.split(" ");
+            ArrayList<Track> tracksToAdd = new ArrayList<>();
+            for (String textArgumentsPart : textArguments) {
+                if (textArgumentsPart.trim().length() > 0) {
+                    tracksToAdd.addAll(trackLoader.getTracksByUrl(textArgumentsPart, member.getId()));
+                }
+            }
             if (tracksToAdd.size() == 0) {
+                // Невозможно добавить трек
                 getMessageSender(member.getGuild()).sendError("Ничего не добавлено");
             } else if (tracksToAdd.size() == 1) {
+                // Добавление одного трека
                 getMessageSender(member.getGuild()).sendMessage("Добавлен один трек");
                 getTrackScheduler(member.getGuild()).insert(tracksToAdd.get(0));
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } else {
+                // Добавление нескольких треков
                 getMessageSender(member.getGuild()).sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
                 for (Track trackToAdd : tracksToAdd) {
                     getTrackScheduler(member.getGuild()).insert(trackToAdd);

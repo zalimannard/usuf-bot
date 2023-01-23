@@ -20,12 +20,21 @@ public class TrackLoader {
         }
     }
 
-    public ArrayList<Track> getTracksByUrl(String url, String requesterId) {
+    public ArrayList<Track> getTracks(String url, String requesterId) {
         for (Platform platform : platforms) {
             if (platform.isFromThisPlatform(url)) {
                 return platform.getTracksByUrl(url, requesterId);
             }
         }
         return new ArrayList<>();
+    }
+
+    public String getThumbnailUrl(Track track) {
+        for (Platform platform : platforms) {
+            if (platform.isFromThisPlatform(track.getUrl())) {
+                return platform.getThumbnailUrl(track);
+            }
+        }
+        return "https://via.placeholder.com/2/FF0000/000000";
     }
 }

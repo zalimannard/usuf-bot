@@ -2,6 +2,7 @@ package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.managers.AudioManager;
+import ru.zalimannard.Utils;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -38,7 +39,7 @@ public class Play extends Command {
             ArrayList<Track> tracksToAdd = new ArrayList<>();
             for (String textArgumentsPart : textArguments) {
                 if (textArgumentsPart.trim().length() > 0) {
-                    tracksToAdd.addAll(trackLoader.getTracksByUrl(textArgumentsPart, member.getId()));
+                    tracksToAdd.addAll(trackLoader.getTracks(textArgumentsPart, member.getId()));
                 }
             }
             if (tracksToAdd.size() == 0) {
@@ -46,8 +47,8 @@ public class Play extends Command {
                 getMessageSender(member.getGuild()).sendError("Ничего не добавлено");
             } else if (tracksToAdd.size() == 1) {
                 // Добавление одного трека
-                getMessageSender(member.getGuild()).sendMessage("Добавлен один трек");
                 getTrackScheduler(member.getGuild()).insert(tracksToAdd.get(0));
+                getMessageSender(member.getGuild()).sendTrackAdded(tracksToAdd.get(0), getTrackScheduler(member.getGuild()).getPlaylistSize(), Utils.calculateTimeToTrack(getTrackScheduler(member.getGuild()), getTrackScheduler(member.getGuild()).getPlaylistSize()));
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } else {
                 // Добавление нескольких треков

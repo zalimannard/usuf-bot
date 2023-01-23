@@ -14,4 +14,18 @@ public abstract class Utils {
         }
         return true;
     }
+
+    public static Duration calculateTimeToTrack(TrackScheduler scheduler, int trackNumberInQueue) {
+        Duration timeToTrack = new Duration(0);
+        if (trackNumberInQueue > scheduler.getCurrentTrackNumber()) {
+            Duration remainingTimeCurrentTrack = scheduler.getCurrentTrack().getDuration();
+            remainingTimeCurrentTrack.sub(scheduler.getCurrentTrackTimePosition());
+            timeToTrack.add(remainingTimeCurrentTrack);
+
+            for (int i = scheduler.getCurrentTrackNumber() + 1; i < trackNumberInQueue; ++i) {
+                timeToTrack.add(scheduler.getTrack(i).getDuration());
+            }
+        }
+        return timeToTrack;
+    }
 }

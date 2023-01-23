@@ -84,7 +84,7 @@ public class YouTubePlatform implements Platform {
             response.add(new Track(
                     searchResultVideoDetail.title(),
                     searchResultVideoDetail.author(),
-                    new Duration(Long.valueOf(searchResultVideoDetails.get(0).lengthSeconds())),
+                    new Duration(Long.valueOf(searchResultVideoDetails.get(0).lengthSeconds() * 1000)),
                     "https://www.youtube.com/watch?v=" + searchResultVideoDetails.get(0).videoId(),
                     ""
             ));
@@ -140,7 +140,7 @@ public class YouTubePlatform implements Platform {
                 tracks.add(new Track(
                         videoDetails.title(),
                         videoDetails.author(),
-                        new Duration(Long.valueOf(videoDetails.lengthSeconds())),
+                        new Duration(Long.valueOf(videoDetails.lengthSeconds() * 1000L)),
                         "https://www.youtube.com/watch?v=" + videoId,
                         requesterId
                 ));

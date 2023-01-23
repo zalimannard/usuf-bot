@@ -2,9 +2,12 @@ package ru.zalimannard;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.commands.*;
+import ru.zalimannard.track.Track;
+import ru.zalimannard.track.TrackLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -63,6 +66,34 @@ public class MessageSender {
             helpEmbed.addField(names + " " + arguments, command.getDescription(), false);
         }
         getCurrentMessageChannel().sendMessageEmbeds(helpEmbed.build()).submit();
+    }
+
+    public void sendTrackAdded(Track track, int queueNumber, Duration timeTo) {
+        EmbedBuilder trackAddedEmbed = new EmbedBuilder();
+        trackAddedEmbed.setColor(goodColor);
+        trackAddedEmbed.setTitle("Трек добавлен:");
+
+        TrackLoader trackLoader = new TrackLoader();
+        trackAddedEmbed.setThumbnail(trackLoader.getThumbnailUrl(track));
+
+        String mainLine = queueNumber + ". " + track.getTitle();
+        String description = track.getAuthor() + "\n" + track.getUrl() + "\nПродолжительность: " + track.getDuration().getHmsFormat();
+        trackAddedEmbed.addField(mainLine, description, false);
+
+        Member requester = guild.getMemberById(track.getRequesterId());
+        try {
+            if (timeTo.getMilliseconds() > 0) {
+                trackAddedEmbed.setFooter(requester.getNickname() + "    Будет через: " + timeTo.getHmsFormat(), requester.getEffectiveAvatarUrl());
+            } else {
+                trackAddedEmbed.setFooter(requester.getNickname(), requester.getEffectiveAvatarUrl());
+            }
+        } catch (NullPointerException e) {
+            if (timeTo.getMilliseconds() > 0) {
+                trackAddedEmbed.setFooter("Будет через: " + timeTo.getHmsFormat());
+            }
+        }
+
+        getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
     }
 
     public MessageChannel getCurrentMessageChannel() {

@@ -71,7 +71,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public Track getTrack() {
+    public Track getCurrentTrack() {
         if (playlist.size() > 0) {
             return playlist.get(currentTrackNumber - 1);
         }

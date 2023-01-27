@@ -22,36 +22,30 @@ public class TrackScheduler extends AudioEventAdapter {
         this.guild = guild;
     }
 
-    /**
-     * Insert a new track to the end of the playlist.
-     */
     public void insert(Track track) {
-        playlist.add(track);
-        if (playlist.size() == 1) {
-            play(1);
-        }
+        insert(playlist.size(), track);
     }
 
-    /**
-     * Insert a new track into the playlist after specified.
-     */
     public void insert(int number, Track track) {
         if ((number >= 0) && (number <= playlist.size())) {
             playlist.add(number, track);
             if (playlist.size() == 1) {
-                jump(1);
+                play(1);
             } else if (number < currentTrackNumber) {
                 ++currentTrackNumber;
+            } else if (number == currentTrackNumber) {
+                // Неявная предзагрузка трека, если он идёт после текущего
+                playlist.get(currentTrackNumber).getTrackFile();
             }
         }
     }
 
     public void jump(int number) {
         if ((number >= 1) && (number <= playlist.size())) {
-            currentTrackNumber = number;
             if (!isTrackLooped) {
                 --number;
             }
+            currentTrackNumber = number;
             finishTrack();
         }
     }
@@ -79,7 +73,12 @@ public class TrackScheduler extends AudioEventAdapter {
             if (number <= currentTrackNumber) {
                 --currentTrackNumber;
             }
-            if (number == currentTrackNumber) {
+
+            if (playlist.size() == 0) {
+                isTrackLooped = false;
+                isQueueLooped = false;
+                guild.getAudioManager().closeAudioConnection();
+            } else if (number == currentTrackNumber) {
                 finishTrack();
             }
         }
@@ -136,26 +135,19 @@ public class TrackScheduler extends AudioEventAdapter {
         } else if (currentTrackNumber != playlist.size()) {
             play(currentTrackNumber + 1);
         } else {
-            play(0);
+            clear();
         }
     }
 
     private void play(int number) {
-        System.out.println("number: " + number);
-        System.out.println("currentTrackNumber: " + currentTrackNumber);
-        System.out.println(playlist);
         if ((number >= 1) && (number <= playlist.size())) {
             currentTrackNumber = number;
-            PlayerManagerManager.getInstance().getPlayerManager(guild.getId()).loadAndPlay(guild,
-                    playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
-        } else {
-            for (int i = playlist.size(); i >= 1; --i) {
-                remove(i);
+            PlayerManagerManager.getInstance().getPlayerManager(guild.getId())
+                    .loadAndPlay(guild, playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
+            if (currentTrackNumber < playlist.size()) {
+                // Неявная предзагрузка следующего трека
+                playlist.get(currentTrackNumber).getTrackFile();
             }
-            currentTrackNumber = 0;
-            isTrackLooped = false;
-            isQueueLooped = false;
-            guild.getAudioManager().closeAudioConnection();
         }
     }
 

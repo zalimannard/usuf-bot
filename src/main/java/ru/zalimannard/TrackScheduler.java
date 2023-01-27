@@ -56,6 +56,20 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
+    public void clear() {
+        while (playlist.size() > 0) {
+            // Текущая дорожка удаляется последней чтобы не началось новое воспроизведение
+            if (playlist.size() == 1) {
+                remove(1);
+            }
+            else if (playlist.size() == currentTrackNumber) {
+                remove(playlist.size() - 1);
+            } else {
+                remove(playlist.size());
+            }
+        }
+    }
+
     public void remove(int number) {
         if ((number >= 1) && (number <= playlist.size())) {
             if (playlist.get(number - 1).isDownloaded()) {

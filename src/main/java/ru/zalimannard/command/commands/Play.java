@@ -8,6 +8,7 @@ import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
 import ru.zalimannard.track.Track;
 import ru.zalimannard.track.TrackLoader;
+import ru.zalimannard.track.platform.YouTubePlatform;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,10 @@ public class Play extends Command {
                         new Argument(
                                 "URL",
                                 Pattern.compile("( *(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])+")
+                        ),
+                        new Argument(
+                                "Запрос",
+                                Pattern.compile("[ a-zA-Zа-яА-ЯЁ0-9+&@#/%?=~_|!:,.;(){}<>\\[\\]\"'-]+")
                         )
                 )),
                 "Добавить трек(и) в конец очереди",
@@ -57,6 +62,19 @@ public class Play extends Command {
                     getTrackScheduler(member.getGuild()).insert(trackToAdd);
                 }
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
+            }
+        } else if (getArguments().get(1).getPattern().matcher(textArgument).matches()) {
+            AudioManager audioManager = member.getGuild().getAudioManager();
+            YouTubePlatform youTubePlatform = new YouTubePlatform();
+            try {
+                ArrayList<Track> tracksFound = youTubePlatform.search(textArgument);
+                Track trackToAdd = new Track(tracksFound.get(0), member.getId());
+
+                getTrackScheduler(member.getGuild()).insert(trackToAdd);
+                getMessageSender(member.getGuild()).sendTrackAdded(trackToAdd, getTrackScheduler(member.getGuild()).getPlaylistSize(), Utils.calculateTimeToTrack(getTrackScheduler(member.getGuild()), getTrackScheduler(member.getGuild()).getPlaylistSize()));
+                audioManager.openAudioConnection(member.getVoiceState().getChannel());
+            } catch (Exception e) {
+                getMessageSender(member.getGuild()).sendError("Упс, запрос не сработал. Попробуйте по-другому");
             }
         }
     }

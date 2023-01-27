@@ -30,6 +30,14 @@ public class Track {
         LOGGER.trace("Object " + toString() + " has been created");
     }
 
+    public Track(Track track, String requesterId) {
+        this.title = track.title;
+        this.author = track.author;
+        this.duration = track.duration;
+        this.url = track.url;
+        this.requesterId = requesterId;
+    }
+
     public boolean isDownloaded() {
         return trackFile != null;
     }

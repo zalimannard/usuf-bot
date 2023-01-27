@@ -128,6 +128,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private void play(int number) {
         System.out.println("number: " + number);
+        System.out.println("currentTrackNumber: " + currentTrackNumber);
+        System.out.println(playlist);
         if ((number >= 1) && (number <= playlist.size())) {
             currentTrackNumber = number;
             PlayerManagerManager.getInstance().getPlayerManager(guild.getId()).loadAndPlay(guild,

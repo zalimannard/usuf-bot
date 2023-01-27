@@ -32,16 +32,7 @@ public class Clear extends Command {
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
             TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            while (trackScheduler.getPlaylistSize() > 0) {
-                // The bypass is such that the first track does not start playing
-                if (trackScheduler.getPlaylistSize() == 1) {
-                    trackScheduler.remove(1);
-                } else if (trackScheduler.getPlaylistSize() == trackScheduler.getCurrentTrackNumber()) {
-                    trackScheduler.remove(trackScheduler.getPlaylistSize() - 1);
-                } else {
-                    trackScheduler.remove(trackScheduler.getPlaylistSize());
-                }
-            }
+            trackScheduler.clear();
             getMessageSender(member.getGuild()).sendMessage("Очередь очищена");
         }
     }

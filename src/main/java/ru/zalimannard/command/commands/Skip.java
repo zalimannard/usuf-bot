@@ -39,7 +39,7 @@ public class Skip extends Command {
                     && (trackScheduler.isQueueLooped())) {
                 trackScheduler.jump(1);
             } else {
-                trackScheduler.jump(0);
+                trackScheduler.clear();
             }
         }
     }

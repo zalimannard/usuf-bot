@@ -37,4 +37,13 @@ public class TrackLoader {
         }
         return "https://via.placeholder.com/2/FF0000/000000";
     }
+
+    public String getImageUrl(Track track) {
+        for (Platform platform : platforms) {
+            if (platform.isFromThisPlatform(track.getUrl())) {
+                return platform.getImageUrl(track);
+            }
+        }
+        return "https://via.placeholder.com/2/FF0000/000000";
+    }
 }

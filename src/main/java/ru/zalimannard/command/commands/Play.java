@@ -52,8 +52,11 @@ public class Play extends Command {
                 getMessageSender(member.getGuild()).sendError("Ничего не добавлено");
             } else if (tracksToAdd.size() == 1) {
                 // Добавление одного трека
+                getMessageSender(member.getGuild()).sendTrackAdded(tracksToAdd.get(0),
+                        getTrackScheduler(member.getGuild()).getPlaylistSize() + 1,
+                        Utils.calculateTimeToTrack(getTrackScheduler(member.getGuild()),
+                                getTrackScheduler(member.getGuild()).getPlaylistSize() + 1));
                 getTrackScheduler(member.getGuild()).insert(tracksToAdd.get(0));
-                getMessageSender(member.getGuild()).sendTrackAdded(tracksToAdd.get(0), getTrackScheduler(member.getGuild()).getPlaylistSize(), Utils.calculateTimeToTrack(getTrackScheduler(member.getGuild()), getTrackScheduler(member.getGuild()).getPlaylistSize()));
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } else {
                 // Добавление нескольких треков

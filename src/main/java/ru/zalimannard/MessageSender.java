@@ -87,10 +87,49 @@ public class MessageSender {
             } else {
                 trackAddedEmbed.setFooter(requester.getNickname(), requester.getEffectiveAvatarUrl());
             }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             if (timeTo.getMilliseconds() > 0) {
                 trackAddedEmbed.setFooter("Будет через: " + timeTo.getHmsFormat());
             }
+        }
+
+        getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
+    }
+
+    public void sendCurrentTrackInfo(Track track, int queueNumber, int queueSize, boolean isTrackLooped,
+                                     boolean isQueueLooped) {
+        EmbedBuilder trackAddedEmbed = new EmbedBuilder();
+        trackAddedEmbed.setColor(goodColor);
+        trackAddedEmbed.setTitle("Сейчас играет:");
+
+        String mainLine = queueNumber + "/" + queueSize + ". " + track.getTitle();
+        String description = track.getAuthor() + "\n" +
+                track.getUrl() + "\n"
+                + "Продолжительность: " + track.getDuration().getHmsFormat();
+        trackAddedEmbed.addField(mainLine, description, false);
+
+        TrackLoader trackLoader = new TrackLoader();
+        trackAddedEmbed.setImage(trackLoader.getImageUrl(track));
+
+        Member requester = guild.getMemberById(track.getRequesterId());
+        try {
+            String footerText = requester.getNickname();
+            if (isTrackLooped) {
+                footerText += "\nТрек зациклен";
+            }
+            if (isQueueLooped) {
+                footerText += "\nОчередь зациклена";
+            }
+            trackAddedEmbed.setFooter(footerText, requester.getEffectiveAvatarUrl());
+        } catch (Exception e) {
+            String footerText = "";
+            if (isTrackLooped) {
+                footerText += "Трек зациклен";
+            }
+            if (isQueueLooped) {
+                footerText += "\nОчередь зациклена";
+            }
+            trackAddedEmbed.setFooter(footerText);
         }
 
         getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();

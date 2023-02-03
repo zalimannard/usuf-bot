@@ -18,10 +18,10 @@ public abstract class Utils {
     public static Duration calculateTimeToTrack(TrackScheduler scheduler, int trackNumberInQueue) {
         Duration timeToTrack = new Duration(0);
         if (trackNumberInQueue > scheduler.getCurrentTrackNumber()) {
-            if (scheduler.getCurrentTrackNumber() > 0){
+            if (scheduler.getCurrentTrackNumber() > 0) {
                 Duration remainingTimeCurrentTrack = scheduler.getCurrentTrack().getDuration();
-                remainingTimeCurrentTrack.sub(scheduler.getCurrentTrackTimePosition());
                 timeToTrack.add(remainingTimeCurrentTrack);
+                timeToTrack.sub(scheduler.getCurrentTrackTimePosition());
             }
 
             for (int i = scheduler.getCurrentTrackNumber() + 1; i < trackNumberInQueue; ++i) {

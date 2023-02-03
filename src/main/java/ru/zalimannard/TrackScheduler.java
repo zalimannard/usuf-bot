@@ -37,6 +37,7 @@ public class TrackScheduler extends AudioEventAdapter {
                 // Неявная предзагрузка трека, если он идёт после текущего
                 playlist.get(currentTrackNumber).getTrackFile();
             }
+            System.out.println(player.getPlayingTrack().getDuration()/1000);
         }
     }
 

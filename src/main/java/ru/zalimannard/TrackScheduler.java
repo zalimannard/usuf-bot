@@ -147,8 +147,7 @@ public class TrackScheduler extends AudioEventAdapter {
                     .loadAndPlay(guild, playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
             // Сообщение о запущенном треке
             MessageSender messageSender = PlayerManagerManager.getInstance().getMessageSender(guild.getId());
-            messageSender.sendNowPlaying(playlist.get(currentTrackNumber - 1), currentTrackNumber,
-                    playlist.size(), isTrackLooped, isQueueLooped);
+            messageSender.sendNowPlaying(this);
 
             if (currentTrackNumber < playlist.size()) {
                 // Неявная предзагрузка следующего трека

@@ -98,13 +98,14 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
     }
 
-    public void sendNowPlaying(Track track, int queueNumber, int queueSize, boolean isTrackLooped,
-                               boolean isQueueLooped) {
+    public void sendNowPlaying(TrackScheduler scheduler) {
+        Track track = scheduler.getCurrentTrack();
+
         EmbedBuilder nowPlayingEmbed = new EmbedBuilder();
         nowPlayingEmbed.setColor(goodColor);
         nowPlayingEmbed.setTitle("Сейчас играет:");
 
-        String mainLine = queueNumber + "/" + queueSize + ". " + track.getTitle();
+        String mainLine = scheduler.getCurrentTrackNumber() + "/" + scheduler.getPlaylistSize() + ". " + track.getTitle();
         String description = track.getAuthor() + "\n" +
                 track.getUrl() + "\n"
                 + "Продолжительность: " + track.getDuration().getHmsFormat();
@@ -113,24 +114,19 @@ public class MessageSender {
         TrackLoader trackLoader = new TrackLoader();
         nowPlayingEmbed.setImage(trackLoader.getImageUrl(track));
 
-        Member requester = guild.getMemberById(track.getRequesterId());
+        String footerText = "";
+        if (scheduler.isQueueLooped()) {
+            footerText += "Трек зациклен\n";
+        }
+        if (scheduler.isQueueLooped()) {
+            footerText += "Очередь зациклена\n";
+        }
+
         try {
-            String footerText = requester.getNickname();
-            if (isTrackLooped) {
-                footerText += "\nТрек зациклен";
-            }
-            if (isQueueLooped) {
-                footerText += "\nОчередь зациклена";
-            }
-            nowPlayingEmbed.setFooter(footerText, requester.getEffectiveAvatarUrl());
+            Member requester = guild.getMemberById(track.getRequesterId());
+            String requesterNickname = requester.getNickname() + "\n";
+            nowPlayingEmbed.setFooter(requesterNickname + footerText, requester.getEffectiveAvatarUrl());
         } catch (Exception e) {
-            String footerText = "";
-            if (isTrackLooped) {
-                footerText += "Трек зациклен";
-            }
-            if (isQueueLooped) {
-                footerText += "\nОчередь зациклена";
-            }
             nowPlayingEmbed.setFooter(footerText);
         }
 

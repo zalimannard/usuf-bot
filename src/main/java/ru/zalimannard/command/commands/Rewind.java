@@ -1,6 +1,7 @@
 package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
+import ru.zalimannard.Duration;
 import ru.zalimannard.MessageSender;
 import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
@@ -35,7 +36,12 @@ public class Rewind extends Command {
         MessageSender messageSender = getMessageSender(member.getGuild());
 
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-
+            if (Duration.isCorrectDuration(textArgument)) {
+                Duration timePosition = new Duration(textArgument);
+                scheduler.setCurrentTrackTimePosition(timePosition);
+            } else {
+                messageSender.sendError("Время указано в неверном формате");
+            }
         }
     }
 }

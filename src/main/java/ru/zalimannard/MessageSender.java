@@ -44,7 +44,7 @@ public class MessageSender {
 
     public void sendHelp() {
         ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
-                new Play(), new Skip(), new Prev(), new Loop(), new Loopq(), new Clear(), new Help()
+                new Play(), new Skip(), new Prev(), new Info(), new Loop(), new Loopq(), new Clear(), new Help()
         ));
         EmbedBuilder helpEmbed = new EmbedBuilder();
         helpEmbed.setColor(goodColor);
@@ -100,18 +100,18 @@ public class MessageSender {
 
     public void sendNowPlaying(Track track, int queueNumber, int queueSize, boolean isTrackLooped,
                                boolean isQueueLooped) {
-        EmbedBuilder trackAddedEmbed = new EmbedBuilder();
-        trackAddedEmbed.setColor(goodColor);
-        trackAddedEmbed.setTitle("Сейчас играет:");
+        EmbedBuilder nowPlayingEmbed = new EmbedBuilder();
+        nowPlayingEmbed.setColor(goodColor);
+        nowPlayingEmbed.setTitle("Сейчас играет:");
 
         String mainLine = queueNumber + "/" + queueSize + ". " + track.getTitle();
         String description = track.getAuthor() + "\n" +
                 track.getUrl() + "\n"
                 + "Продолжительность: " + track.getDuration().getHmsFormat();
-        trackAddedEmbed.addField(mainLine, description, false);
+        nowPlayingEmbed.addField(mainLine, description, false);
 
         TrackLoader trackLoader = new TrackLoader();
-        trackAddedEmbed.setImage(trackLoader.getImageUrl(track));
+        nowPlayingEmbed.setImage(trackLoader.getImageUrl(track));
 
         Member requester = guild.getMemberById(track.getRequesterId());
         try {
@@ -122,7 +122,7 @@ public class MessageSender {
             if (isQueueLooped) {
                 footerText += "\nОчередь зациклена";
             }
-            trackAddedEmbed.setFooter(footerText, requester.getEffectiveAvatarUrl());
+            nowPlayingEmbed.setFooter(footerText, requester.getEffectiveAvatarUrl());
         } catch (Exception e) {
             String footerText = "";
             if (isTrackLooped) {
@@ -131,16 +131,61 @@ public class MessageSender {
             if (isQueueLooped) {
                 footerText += "\nОчередь зациклена";
             }
-            trackAddedEmbed.setFooter(footerText);
+            nowPlayingEmbed.setFooter(footerText);
         }
 
         deletePreviousNowPlaying();
         try {
             previousNowPlaying =
-                    getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit().get();
+                    getCurrentMessageChannel().sendMessageEmbeds(nowPlayingEmbed.build()).submit().get();
         } catch (Exception e) {
             // Неотправленное сообщение не повод вылетать
         }
+    }
+
+    public void sendTrackInfo(TrackScheduler scheduler, int trackNumber) {
+        Track track = scheduler.getTrack(trackNumber);
+
+        EmbedBuilder trackInfoEmbed = new EmbedBuilder();
+        trackInfoEmbed.setColor(goodColor);
+        if (trackNumber == scheduler.getCurrentTrackNumber()) {
+            trackInfoEmbed.setTitle("Сейчас играет:");
+        } else {
+            trackInfoEmbed.setTitle("О треке:");
+        }
+
+        String mainLine = trackNumber + "/" + scheduler.getPlaylistSize() + ". " + track.getTitle();
+        String description = track.getAuthor() + "\n" +
+                track.getUrl() + "\n"
+                + "Продолжительность: " + track.getDuration().getHmsFormat();
+        trackInfoEmbed.addField(mainLine, description, false);
+
+        TrackLoader trackLoader = new TrackLoader();
+        trackInfoEmbed.setThumbnail(trackLoader.getThumbnailUrl(scheduler.getTrack(trackNumber)));
+
+        String footerText = "";
+        if (scheduler.isQueueLooped()) {
+            footerText += "Трек зациклен\n";
+        }
+        if (scheduler.isQueueLooped()) {
+            footerText += "Очередь зациклена\n";
+        }
+        if (trackNumber == scheduler.getCurrentTrackNumber()) {
+            footerText += scheduler.getCurrentTrackTimePosition().getHmsFormat() + " / " + scheduler.getCurrentTrack().getDuration().getHmsFormat() + "\n";
+        }
+        if (trackNumber > scheduler.getCurrentTrackNumber()) {
+            footerText += "Будет через: " + Utils.calculateTimeToTrack(scheduler, trackNumber).getHmsFormat() + "\n";
+        }
+
+        try {
+            Member requester = guild.getMemberById(track.getRequesterId());
+            String requesterNickname = requester.getNickname() + "\n";
+            trackInfoEmbed.setFooter(requesterNickname + footerText, requester.getEffectiveAvatarUrl());
+        } catch (Exception e) {
+            trackInfoEmbed.setFooter(footerText);
+        }
+
+        getCurrentMessageChannel().sendMessageEmbeds(trackInfoEmbed.build()).submit();
     }
 
     public void deletePreviousNowPlaying() {

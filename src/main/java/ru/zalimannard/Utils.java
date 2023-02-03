@@ -31,6 +31,14 @@ public abstract class Utils {
         return timeToTrack;
     }
 
+    public static Duration calculateFullTime(TrackScheduler scheduler) {
+        Duration fullDuration = new Duration(0);
+        for (int i = 1; i < scheduler.getPlaylistSize(); ++i) {
+            fullDuration.add(scheduler.getTrack(i).getDuration());
+        }
+        return fullDuration;
+    }
+
     public static String russianToEnglish(String string) {
         String russian = "йцукенгшщзфывапролдячсмитьЙЦУКЕНГШЩЗФЫВАПРОЛДЯЧСМИТЬ";
         String english = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";

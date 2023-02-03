@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import ru.zalimannard.command.Command;
+import ru.zalimannard.command.commands.Queue;
 import ru.zalimannard.command.commands.*;
 import ru.zalimannard.track.Track;
 import ru.zalimannard.track.TrackLoader;
@@ -186,6 +187,36 @@ public class MessageSender {
     }
 
     public void sendQueue(TrackScheduler scheduler, int first, int last) {
+        first = Math.max(1, first);
+        last = Math.min(scheduler.getPlaylistSize(), last);
+        EmbedBuilder queueEmbed = new EmbedBuilder();
+
+        int counter = 0;
+        for (int i = first; i <= last; ++i) {
+            ++counter;
+            String firstLine = i + ". " + scheduler.getTrack(i).getTitle();
+            if (i == scheduler.getCurrentTrackNumber()) {
+                firstLine = "\uD83C\uDF1F " + firstLine;
+            }
+            String secondLine = scheduler.getTrack(i).getDuration().getHmsFormat();
+            try {
+                Member requester = guild.getMemberById(scheduler.getTrack(i).getRequesterId());
+                secondLine += "    Заказал: " + requester.getNickname();
+            } catch (Exception e) {
+                // Если не найден заказчик - всё равно
+            }
+            secondLine += "\n" + scheduler.getTrack(i).getUrl();
+
+            queueEmbed.addField(firstLine, secondLine, false);
+
+            if ((counter % 25 == 0) || (i == last)) {
+                queueEmbed.setColor(goodColor);
+                queueEmbed.setTitle("Очередь воспроизведения (Всего " + scheduler.getPlaylistSize() +
+                        ", на " + Utils.calculateFullTime(scheduler).getHmsFormat() + "):");
+                getCurrentMessageChannel().sendMessageEmbeds(queueEmbed.build()).submit();
+                queueEmbed = new EmbedBuilder();
+            }
+        }
     }
 
     public void deletePreviousNowPlaying() {

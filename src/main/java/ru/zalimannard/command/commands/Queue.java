@@ -17,7 +17,7 @@ public class Queue extends Command {
                 new ArrayList<>(Arrays.asList("queue", "q")),
                 new ArrayList<>(Arrays.asList(
                         new Argument(
-                                "",
+                                " ",
                                 Pattern.compile(" *")
                         ),
                         new Argument(
@@ -25,12 +25,12 @@ public class Queue extends Command {
                                 Pattern.compile("[0-9]+")
                         ),
                         new Argument(
-                                "до [n]",
+                                "b [n]",
                                 Pattern.compile("b [0-9]+")
                         ),
                         new Argument(
-                                "все",
-                                Pattern.compile("a")
+                                "all",
+                                Pattern.compile("all")
                         )
                 )),
                 "Показать 10/n треков после/до текущего и всю очередь",

@@ -13,6 +13,7 @@ public abstract class CommandFactory {
             new Jump(),
             new Queue(),
             new Insert(),
+            new Remove(),
             new Prev(),
             new Loop(),
             new Loopq(),

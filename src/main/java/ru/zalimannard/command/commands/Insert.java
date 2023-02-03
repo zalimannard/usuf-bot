@@ -64,7 +64,7 @@ public class Insert extends Command {
             } else {
                 // Добавление нескольких треков
                 for (int i = 0; i < tracksToAdd.size(); ++i) {
-                    scheduler.insert(scheduler.getCurrentTrackNumber() + i, tracksToAdd.get(0));
+                    scheduler.insert(scheduler.getCurrentTrackNumber() + i, tracksToAdd.get(i));
                 }
                 messageSender.sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
@@ -89,7 +89,7 @@ public class Insert extends Command {
                 } else {
                     // Добавление нескольких треков
                     for (int i = 0; i < tracksToAdd.size(); ++i) {
-                        scheduler.insert(numberBefore + i, tracksToAdd.get(0));
+                        scheduler.insert(numberBefore + i, tracksToAdd.get(i));
                     }
                     messageSender.sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
                     audioManager.openAudioConnection(member.getVoiceState().getChannel());

@@ -1,8 +1,6 @@
 package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import ru.zalimannard.MessageSender;
-import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -42,9 +40,6 @@ public class Queue extends Command {
 
     @Override
     protected void onExecute(Member member, String textArgument) {
-        TrackScheduler scheduler = getTrackScheduler(member.getGuild());
-        MessageSender messageSender = getMessageSender(member.getGuild());
-
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
             messageSender.sendQueue(scheduler, scheduler.getCurrentTrackNumber() - 1,
                     scheduler.getCurrentTrackNumber() + 10);

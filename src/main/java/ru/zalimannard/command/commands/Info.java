@@ -33,15 +33,15 @@ public class Info extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            getMessageSender(member.getGuild()).sendTrackInfo(
-                    getTrackScheduler(member.getGuild()),
-                    getTrackScheduler(member.getGuild()).getCurrentTrackNumber());
+            messageSender.sendTrackInfo(
+                    scheduler,
+                    scheduler.getCurrentTrackNumber());
         } else if (getArguments().get(1).getPattern().matcher(textArgument).matches()) {
-            if ((Integer.parseInt(textArgument) < 1) || (Integer.parseInt(textArgument) > getTrackScheduler(member.getGuild()).getPlaylistSize())) {
-                getMessageSender(member.getGuild()).sendError("Неверный номер трека");
+            if ((Integer.parseInt(textArgument) < 1) || (Integer.parseInt(textArgument) > scheduler.getPlaylistSize())) {
+                messageSender.sendError("Неверный номер трека");
             } else {
-                getMessageSender(member.getGuild()).sendTrackInfo(
-                        getTrackScheduler(member.getGuild()),
+                messageSender.sendTrackInfo(
+                        scheduler,
                         Integer.parseInt(textArgument));
             }
         }

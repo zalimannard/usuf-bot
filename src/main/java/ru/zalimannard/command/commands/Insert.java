@@ -2,8 +2,6 @@ package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.managers.AudioManager;
-import ru.zalimannard.MessageSender;
-import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -47,8 +45,6 @@ public class Insert extends Command {
 
     @Override
     protected void onExecute(Member member, String textArgument) {
-        TrackScheduler scheduler = getTrackScheduler(member.getGuild());
-        MessageSender messageSender = getMessageSender(member.getGuild());
         AudioManager audioManager = member.getGuild().getAudioManager();
         TrackLoader trackLoader = new TrackLoader();
 
@@ -59,7 +55,7 @@ public class Insert extends Command {
             }
             if (tracksToAdd.size() == 0) {
                 // Невозможно добавить трек
-                getMessageSender(member.getGuild()).sendError("Ничего не добавлено");
+                messageSender.sendError("Ничего не добавлено");
             } else if (tracksToAdd.size() == 1) {
                 // Добавление одного трека
                 scheduler.insert(scheduler.getCurrentTrackNumber(), tracksToAdd.get(0));
@@ -84,7 +80,7 @@ public class Insert extends Command {
                 }
                 if (tracksToAdd.size() == 0) {
                     // Невозможно добавить трек
-                    getMessageSender(member.getGuild()).sendError("Ничего не добавлено");
+                    messageSender.sendError("Ничего не добавлено");
                 } else if (tracksToAdd.size() == 1) {
                     // Добавление одного трека
                     scheduler.insert(numberBefore, tracksToAdd.get(0));
@@ -115,7 +111,7 @@ public class Insert extends Command {
                 messageSender.sendTrackAdded(scheduler, numberBefore + 1);
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } catch (Exception e) {
-                getMessageSender(member.getGuild()).sendError("Упс, запрос не сработал. Попробуйте по-другому");
+                messageSender.sendError("Упс, запрос не сработал. Попробуйте по-другому");
             }
 
         } else if (getArguments().get(3).getPattern().matcher(textArgument).matches()) {
@@ -129,7 +125,7 @@ public class Insert extends Command {
                 messageSender.sendTrackAdded(scheduler, scheduler.getCurrentTrackNumber() + 1);
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } catch (Exception e) {
-                getMessageSender(member.getGuild()).sendError("Упс, запрос не сработал. Попробуйте по-другому");
+                messageSender.sendError("Упс, запрос не сработал. Попробуйте по-другому");
             }
         }
     }

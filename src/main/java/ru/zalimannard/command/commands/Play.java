@@ -48,18 +48,17 @@ public class Play extends Command {
             }
             if (tracksToAdd.size() == 0) {
                 // Невозможно добавить трек
-                getMessageSender(member.getGuild()).sendError("Ничего не добавлено");
+                messageSender.sendError("Ничего не добавлено");
             } else if (tracksToAdd.size() == 1) {
                 // Добавление одного трека
-                getTrackScheduler(member.getGuild()).insert(tracksToAdd.get(0));
-                getMessageSender(member.getGuild()).sendTrackAdded(getTrackScheduler(member.getGuild()),
-                        getTrackScheduler(member.getGuild()).getPlaylistSize());
+                scheduler.insert(tracksToAdd.get(0));
+                messageSender.sendTrackAdded(scheduler, scheduler.getPlaylistSize());
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } else {
                 // Добавление нескольких треков
-                getMessageSender(member.getGuild()).sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
+                messageSender.sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
                 for (Track trackToAdd : tracksToAdd) {
-                    getTrackScheduler(member.getGuild()).insert(trackToAdd);
+                    scheduler.insert(trackToAdd);
                 }
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             }
@@ -70,12 +69,12 @@ public class Play extends Command {
                 ArrayList<Track> tracksFound = youTubePlatform.search(textArgument);
                 Track trackToAdd = new Track(tracksFound.get(0), member.getId());
 
-                getTrackScheduler(member.getGuild()).insert(trackToAdd);
-                getMessageSender(member.getGuild()).sendTrackAdded(getTrackScheduler(member.getGuild()),
-                        getTrackScheduler(member.getGuild()).getPlaylistSize());
+                scheduler.insert(trackToAdd);
+                messageSender.sendTrackAdded(scheduler,
+                        scheduler.getPlaylistSize());
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } catch (Exception e) {
-                getMessageSender(member.getGuild()).sendError("Упс, запрос не сработал. Попробуйте по-другому");
+                messageSender.sendError("Упс, запрос не сработал. Попробуйте по-другому");
             }
         }
     }

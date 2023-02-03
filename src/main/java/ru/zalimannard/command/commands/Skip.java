@@ -1,7 +1,6 @@
 package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -31,15 +30,14 @@ public class Skip extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            trackScheduler.setTrackLooped(false);
-            if (trackScheduler.getCurrentTrackNumber() < trackScheduler.getPlaylistSize()) {
-                trackScheduler.jump(trackScheduler.getCurrentTrackNumber() + 1);
-            } else if ((trackScheduler.getCurrentTrackNumber() == trackScheduler.getPlaylistSize())
-                    && (trackScheduler.isQueueLooped())) {
-                trackScheduler.jump(1);
+            scheduler.setTrackLooped(false);
+            if (scheduler.getCurrentTrackNumber() < scheduler.getPlaylistSize()) {
+                scheduler.jump(scheduler.getCurrentTrackNumber() + 1);
+            } else if ((scheduler.getCurrentTrackNumber() == scheduler.getPlaylistSize())
+                    && (scheduler.isQueueLooped())) {
+                scheduler.jump(1);
             } else {
-                trackScheduler.clear();
+                scheduler.clear();
             }
         }
     }

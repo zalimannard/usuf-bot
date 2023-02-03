@@ -1,7 +1,6 @@
 package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -31,9 +30,8 @@ public class Clear extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            trackScheduler.clear();
-            getMessageSender(member.getGuild()).sendMessage("Очередь очищена");
+            scheduler.clear();
+            messageSender.sendMessage("Очередь очищена");
         }
     }
 }

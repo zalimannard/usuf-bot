@@ -1,7 +1,6 @@
 package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -31,12 +30,11 @@ public class Loopq extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            trackScheduler.setQueueLooped(!trackScheduler.isQueueLooped());
-            if (trackScheduler.isQueueLooped()) {
-                getMessageSender(member.getGuild()).sendMessage("Зацикливание очереди включено");
+            scheduler.setQueueLooped(!scheduler.isQueueLooped());
+            if (scheduler.isQueueLooped()) {
+                messageSender.sendMessage("Зацикливание очереди включено");
             } else {
-                getMessageSender(member.getGuild()).sendMessage("Зацикливание очереди отключено");
+                messageSender.sendMessage("Зацикливание очереди отключено");
             }
         }
     }

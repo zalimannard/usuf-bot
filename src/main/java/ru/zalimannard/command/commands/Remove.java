@@ -47,13 +47,50 @@ public class Remove extends Command {
         MessageSender messageSender = getMessageSender(member.getGuild());
 
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
+            int number = Integer.parseInt(textArgument);
+            if ((number >= 1) && (number <= scheduler.getPlaylistSize())) {
+                String title = scheduler.getTrack(number).getTitle();
+                scheduler.remove(number);
+                messageSender.sendMessage("Трек " + title + " удалён");
+            } else {
+                messageSender.sendError("Нет такого трека");
+            }
 
         } else if (getArguments().get(1).getPattern().matcher(textArgument).matches()) {
+            int number = Integer.parseInt(textArgument.split("-")[1]);
+            if (number >= 1) {
+                for (int i = number; i >= 1; --i) {
+                    scheduler.remove(i);
+                }
+                messageSender.sendMessage("Треки 1-" + number + " удалены");
+            } else {
+                messageSender.sendError("Нечего удалять");
+            }
 
         } else if (getArguments().get(2).getPattern().matcher(textArgument).matches()) {
+            int number = Integer.parseInt(textArgument.split("-")[0]);
+            int size = scheduler.getPlaylistSize();
+            if (number <= size) {
+                for (int i = size; i >= number; --i) {
+                    scheduler.remove(i);
+                }
+                messageSender.sendMessage("Треки " + number + "-" + size + " удалены");
+            } else {
+                messageSender.sendError("Нечего удалять");
+            }
 
         } else if (getArguments().get(3).getPattern().matcher(textArgument).matches()) {
+            int left = Math.min(Integer.parseInt(textArgument.split("-")[0]), Integer.parseInt(textArgument.split("-")[1]));
+            int right = Math.max(Integer.parseInt(textArgument.split("-")[0]), Integer.parseInt(textArgument.split("-")[1]));
 
+            if ((left <= scheduler.getPlaylistSize()) && (right >= 1)) {
+                for (int i = right; i >= left; --i) {
+                    scheduler.remove(i);
+                }
+                messageSender.sendMessage("Треки " + left + "-" + right + " удалены");
+            } else {
+                messageSender.sendError("Нечего удалять");
+            }
         }
     }
 }

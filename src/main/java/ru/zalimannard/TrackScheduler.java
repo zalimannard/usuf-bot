@@ -74,8 +74,10 @@ public class TrackScheduler extends AudioEventAdapter {
             playlist.remove(number - 1);
             if (number <= currentTrackNumber) {
                 --currentTrackNumber;
-            }
-            if (number == currentTrackNumber + 1) {
+                if (number == currentTrackNumber + 1) {
+                    finishTrack();
+                }
+            } else if (number == currentTrackNumber) {
                 finishTrack();
             }
         }

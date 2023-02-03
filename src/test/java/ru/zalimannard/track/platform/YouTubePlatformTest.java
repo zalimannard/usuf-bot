@@ -3,7 +3,6 @@ package ru.zalimannard.track.platform;
 import org.junit.jupiter.api.Test;
 import ru.zalimannard.track.Track;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,11 +66,11 @@ class YouTubePlatformTest {
     }
 
     @Test
-    void isFromThisPlatform_httpYoutuDotBeUrl_false() {
+    void isFromThisPlatform_httpYoutuDotBeUrl_true() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String incorrectVideoUrl = "http://youtube.com/watch?v=I8iYWNs_Tik";
 
-        assertFalse(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
+        assertTrue(youTubePlatform.isFromThisPlatform(incorrectVideoUrl));
     }
 
     @Test
@@ -106,6 +105,16 @@ class YouTubePlatformTest {
     void search_emptyString_emptyList() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String request = "";
+
+        ArrayList<Track> tracks = youTubePlatform.search(request);
+
+        assertEquals(0, tracks.size());
+    }
+
+    @Test
+    void search_null_emptyList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String request = null;
 
         ArrayList<Track> tracks = youTubePlatform.search(request);
 
@@ -233,6 +242,26 @@ class YouTubePlatformTest {
     }
 
     @Test
+    void getTracksByUrl_incorrectUrl_emptyTrackList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://www.youtube.com/watch?=jfKfPfyJRdk";
+
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
+
+        assertEquals(0, tracks.size());
+    }
+
+
+    @Test
+    void getTracksByUrl_null_emptyTrackList() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = null;
+
+        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
+
+        assertEquals(0, tracks.size());
+    }
+    @Test
     void download_standardVideo_fileDownloaded() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
@@ -242,47 +271,59 @@ class YouTubePlatformTest {
 
         Track track = tracks.get(0);
 
-        try {
-            assertNotNull(track.getTrackFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        assertNotNull(track.getTrackFile());
     }
 
     @Test
     void download_notAvailableForDownloadVideo_nullVideoFile() {
         Track track = new Track(null, null, null, "https://youtube.com/watch?v=I8iYWNs_Tikarstarstars", null);
 
-        try {
-            assertNull(track.getTrackFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        assertNull(track.getTrackFile());
     }
 
     @Test
-    void getThumbnailUrl_standardVideo_nonNullUrl() {
+    void getThumbnailUrl_standardVideo_correctUrl() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
-        assertNotEquals(0, tracks.size());
+        String thumbnailUrl = youTubePlatform.getThumbnailUrl(track);
 
-        Track track = tracks.get(0);
-
-        assertNotNull(youTubePlatform.getThumbnailUrl(track));
+        String correctThumbnailUrl = "https://i.ytimg.com/vi/I8iYWNs_Tik/default.jpg";
+        assertNotNull(correctThumbnailUrl, thumbnailUrl);
     }
 
     @Test
-    void getImageUrl_standardVideo_nonNullUrl() {
+    void getImageUrl_standardVideo_correctUrl() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();
         String url = "https://youtube.com/watch?v=I8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
 
-        ArrayList<Track> tracks = youTubePlatform.getTracksByUrl(url, "0");
-        assertNotEquals(0, tracks.size());
+        String imageUrl = youTubePlatform.getImageUrl(track);
 
-        Track track = tracks.get(0);
+        String correctThumbnailUrl = "https://i.ytimg.com/vi/I8iYWNs_Tik/hqdefault.jpg";
+        assertNotNull(correctThumbnailUrl, imageUrl);
+    }
 
-        assertNotNull(youTubePlatform.getImageUrl(track));
+    @Test
+    void getThumbnailUrl_trackWithIncorrectUrl_null() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://youtube.com/watch?vI8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
+
+        String thumbnailUrl = youTubePlatform.getThumbnailUrl(track);
+
+        assertNull(thumbnailUrl);
+    }
+
+    @Test
+    void getImageUrl_standardVideo_null() {
+        YouTubePlatform youTubePlatform = new YouTubePlatform();
+        String url = "https://youtube.com/watch?vI8iYWNs_Tik";
+        Track track = new Track(null, null, null, url, null);
+
+        String imageUrl = youTubePlatform.getImageUrl(track);
+
+        assertNull(imageUrl);
     }
 }

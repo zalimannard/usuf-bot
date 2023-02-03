@@ -1,8 +1,6 @@
 package ru.zalimannard.command;
 
-import ru.zalimannard.command.commands.Clear;
-import ru.zalimannard.command.commands.Help;
-import ru.zalimannard.command.commands.Play;
+import ru.zalimannard.command.commands.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +8,10 @@ import java.util.Arrays;
 public abstract class CommandFactory {
     private static ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
             new Play(),
+            new Skip(),
+            new Prev(),
+            new Loop(),
+            new Loopq(),
             new Clear(),
             new Help()
     ));

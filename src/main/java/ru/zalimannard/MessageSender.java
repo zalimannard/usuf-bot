@@ -2,45 +2,32 @@ package ru.zalimannard;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import ru.zalimannard.command.Command;
-import ru.zalimannard.command.CommandFactory;
-import ru.zalimannard.command.commands.Clear;
-import ru.zalimannard.command.commands.Help;
-import ru.zalimannard.command.commands.Play;
+import ru.zalimannard.command.commands.*;
+import ru.zalimannard.track.Track;
+import ru.zalimannard.track.TrackLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * The type Message sender.
- */
 public class MessageSender {
     private final String commandPrefix;
     private final Color goodColor = Color.decode("#2ECC71");
     private final Color badColor = Color.decode("#FF0000");
     private MessageChannel currentMessageChannel;
     private final Guild guild;
+    private Message previousNowPlaying;
 
-    /**
-     * Instantiates a new Message sender.
-     *
-     * @param commandPrefix         the command prefix
-     * @param currentMessageChannel the current message channel
-     * @param guild                 the guild
-     */
     public MessageSender(String commandPrefix, MessageChannel currentMessageChannel, Guild guild) {
         this.commandPrefix = commandPrefix;
         setCurrentMessageChannel(currentMessageChannel);
         this.guild = guild;
     }
 
-    /**
-     * Send message.
-     *
-     * @param text the text
-     */
     public void sendMessage(String text) {
         EmbedBuilder trackAddedEmbed = new EmbedBuilder();
         trackAddedEmbed.setColor(goodColor);
@@ -48,11 +35,6 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
     }
 
-    /**
-     * Send error.
-     *
-     * @param text the text
-     */
     public void sendError(String text) {
         EmbedBuilder trackAddedEmbed = new EmbedBuilder();
         trackAddedEmbed.setColor(badColor);
@@ -60,13 +42,9 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
     }
 
-
-    /**
-     * Send help.
-     */
     public void sendHelp() {
         ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
-                new Play(), new Clear(), new Help()
+                new Play(), new Skip(), new Prev(), new Loop(), new Loopq(), new Clear(), new Help()
         ));
         EmbedBuilder helpEmbed = new EmbedBuilder();
         helpEmbed.setColor(goodColor);
@@ -84,7 +62,7 @@ public class MessageSender {
             } else {
                 arguments = "(" + command.getArguments().get(0).getText() + ")";
                 for (int i = 1; i < command.getArguments().size(); ++i) {
-                    names += " / (" + command.getArguments().get(i) + ")";
+                    arguments += " / (" + command.getArguments().get(i).getText() + ")";
                 }
             }
             helpEmbed.addField(names + " " + arguments, command.getDescription(), false);
@@ -92,20 +70,90 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(helpEmbed.build()).submit();
     }
 
-    /**
-     * Gets current message channel.
-     *
-     * @return the current message channel
-     */
+    public void sendTrackAdded(Track track, int queueNumber, Duration timeTo) {
+        EmbedBuilder trackAddedEmbed = new EmbedBuilder();
+        trackAddedEmbed.setColor(goodColor);
+        trackAddedEmbed.setTitle("Трек добавлен:");
+
+        TrackLoader trackLoader = new TrackLoader();
+        trackAddedEmbed.setThumbnail(trackLoader.getThumbnailUrl(track));
+
+        String mainLine = queueNumber + ". " + track.getTitle();
+        String description = track.getAuthor() + "\n" + track.getUrl() + "\nПродолжительность: " + track.getDuration().getHmsFormat();
+        trackAddedEmbed.addField(mainLine, description, false);
+
+        Member requester = guild.getMemberById(track.getRequesterId());
+        try {
+            if (timeTo.getMilliseconds() > 0) {
+                trackAddedEmbed.setFooter(requester.getNickname() + "    Будет через: " + timeTo.getHmsFormat(), requester.getEffectiveAvatarUrl());
+            } else {
+                trackAddedEmbed.setFooter(requester.getNickname(), requester.getEffectiveAvatarUrl());
+            }
+        } catch (Exception e) {
+            if (timeTo.getMilliseconds() > 0) {
+                trackAddedEmbed.setFooter("Будет через: " + timeTo.getHmsFormat());
+            }
+        }
+
+        getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
+    }
+
+    public void sendNowPlaying(Track track, int queueNumber, int queueSize, boolean isTrackLooped,
+                               boolean isQueueLooped) {
+        EmbedBuilder trackAddedEmbed = new EmbedBuilder();
+        trackAddedEmbed.setColor(goodColor);
+        trackAddedEmbed.setTitle("Сейчас играет:");
+
+        String mainLine = queueNumber + "/" + queueSize + ". " + track.getTitle();
+        String description = track.getAuthor() + "\n" +
+                track.getUrl() + "\n"
+                + "Продолжительность: " + track.getDuration().getHmsFormat();
+        trackAddedEmbed.addField(mainLine, description, false);
+
+        TrackLoader trackLoader = new TrackLoader();
+        trackAddedEmbed.setImage(trackLoader.getImageUrl(track));
+
+        Member requester = guild.getMemberById(track.getRequesterId());
+        try {
+            String footerText = requester.getNickname();
+            if (isTrackLooped) {
+                footerText += "\nТрек зациклен";
+            }
+            if (isQueueLooped) {
+                footerText += "\nОчередь зациклена";
+            }
+            trackAddedEmbed.setFooter(footerText, requester.getEffectiveAvatarUrl());
+        } catch (Exception e) {
+            String footerText = "";
+            if (isTrackLooped) {
+                footerText += "Трек зациклен";
+            }
+            if (isQueueLooped) {
+                footerText += "\nОчередь зациклена";
+            }
+            trackAddedEmbed.setFooter(footerText);
+        }
+
+        deletePreviousNowPlaying();
+        try {
+            previousNowPlaying =
+                    getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit().get();
+        } catch (Exception e) {
+            // Неотправленное сообщение не повод вылетать
+        }
+    }
+
+    public void deletePreviousNowPlaying() {
+        if (previousNowPlaying != null) {
+            previousNowPlaying.delete().submit();
+            previousNowPlaying = null;
+        }
+    }
+
     public MessageChannel getCurrentMessageChannel() {
         return currentMessageChannel;
     }
 
-    /**
-     * Sets current message channel.
-     *
-     * @param currentMessageChannel the current message channel
-     */
     public void setCurrentMessageChannel(MessageChannel currentMessageChannel) {
         this.currentMessageChannel = currentMessageChannel;
     }

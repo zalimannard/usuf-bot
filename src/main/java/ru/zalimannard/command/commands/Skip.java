@@ -10,17 +10,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class Clear extends Command {
-    public Clear() {
+public class Skip extends Command {
+    public Skip() {
         super(
-                new ArrayList<>(Arrays.asList("clear", "c")),
+                new ArrayList<>(Arrays.asList("skip", "s")),
                 new ArrayList<>(Arrays.asList(
                         new Argument(
                                 " ",
                                 Pattern.compile(" *")
                         )
                 )),
-                "Очистить очередь",
+                "Пропустить текущий трек",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL,
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL
@@ -32,8 +32,15 @@ public class Clear extends Command {
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
             TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            trackScheduler.clear();
-            getMessageSender(member.getGuild()).sendMessage("Очередь очищена");
+            trackScheduler.setTrackLooped(false);
+            if (trackScheduler.getCurrentTrackNumber() < trackScheduler.getPlaylistSize()) {
+                trackScheduler.jump(trackScheduler.getCurrentTrackNumber() + 1);
+            } else if ((trackScheduler.getCurrentTrackNumber() == trackScheduler.getPlaylistSize())
+                    && (trackScheduler.isQueueLooped())) {
+                trackScheduler.jump(1);
+            } else {
+                trackScheduler.clear();
+            }
         }
     }
 }

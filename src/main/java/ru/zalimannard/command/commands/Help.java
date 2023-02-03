@@ -8,14 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-/**
- * The command Help.
- */
 public class Help extends Command {
-
-    /**
-     * Instantiates a new Help command.
-     */
     public Help() {
         super(
                 new ArrayList<>(Arrays.asList("help", "h")),

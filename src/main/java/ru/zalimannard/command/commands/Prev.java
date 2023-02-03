@@ -10,17 +10,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class Clear extends Command {
-    public Clear() {
+public class Prev extends Command {
+    public Prev() {
         super(
-                new ArrayList<>(Arrays.asList("clear", "c")),
+                new ArrayList<>(Arrays.asList("prev", "pr")),
                 new ArrayList<>(Arrays.asList(
                         new Argument(
                                 " ",
                                 Pattern.compile(" *")
                         )
                 )),
-                "Очистить очередь",
+                "Пропустить текущий трек",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL,
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL
@@ -32,8 +32,12 @@ public class Clear extends Command {
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
             TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            trackScheduler.clear();
-            getMessageSender(member.getGuild()).sendMessage("Очередь очищена");
+            if (trackScheduler.getCurrentTrackNumber() > 1) {
+                trackScheduler.setTrackLooped(false);
+                trackScheduler.jump(trackScheduler.getCurrentTrackNumber() - 1);
+            } else {
+                getMessageSender(member.getGuild()).sendError("Сейчас играет первый трек в очереди");
+            }
         }
     }
 }

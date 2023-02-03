@@ -1,19 +1,7 @@
 package ru.zalimannard;
 
-/**
- * The abstract class Utils.
- */
 public abstract class Utils {
-    /**
-     * Checking that the string is an integer number. Leading zeros are discarded.
-     *
-     * @param value to check for whether it is an integer number
-     * @return true if the value is integer and non-negative number
-     */
-    public static Boolean isNonNegativeIntegerNumber(String value) {
-        if (value == null) {
-            return false;
-        }
+    public static boolean isNonNegativeIntegerNumber(String value) {
         if (value.length() == 0) {
             return false;
         }
@@ -25,5 +13,32 @@ public abstract class Utils {
             }
         }
         return true;
+    }
+
+    public static Duration calculateTimeToTrack(TrackScheduler scheduler, int trackNumberInQueue) {
+        Duration timeToTrack = new Duration(0);
+        if (trackNumberInQueue > scheduler.getCurrentTrackNumber()) {
+            if (scheduler.getCurrentTrackNumber() > 0){
+                Duration remainingTimeCurrentTrack = scheduler.getCurrentTrack().getDuration();
+                remainingTimeCurrentTrack.sub(scheduler.getCurrentTrackTimePosition());
+                timeToTrack.add(remainingTimeCurrentTrack);
+            }
+
+            for (int i = scheduler.getCurrentTrackNumber() + 1; i < trackNumberInQueue; ++i) {
+                timeToTrack.add(scheduler.getTrack(i).getDuration());
+            }
+        }
+        return timeToTrack;
+    }
+
+    public static String russianToEnglish(String string) {
+        String russian = "йцукенгшщзфывапролдячсмитьЙЦУКЕНГШЩЗФЫВАПРОЛДЯЧСМИТЬ";
+        String english = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+
+        for (int i = 0; i < russian.length(); ++i) {
+            string = string.replace(russian.charAt(i), english.charAt(i));
+        }
+
+        return string;
     }
 }

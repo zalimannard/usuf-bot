@@ -11,6 +11,7 @@ public abstract class CommandFactory {
             new Skip(),
             new Prev(),
             new Info(),
+            new Queue(),
             new Loop(),
             new Loopq(),
             new Clear(),

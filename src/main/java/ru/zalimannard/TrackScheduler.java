@@ -51,6 +51,8 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void clear() {
+        isTrackLooped = false;
+        isQueueLooped = false;
         while (playlist.size() > 0) {
             // Текущая дорожка удаляется последней чтобы не началось новое воспроизведение
             if (playlist.size() == 1) {

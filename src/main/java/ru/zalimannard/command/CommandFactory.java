@@ -10,6 +10,7 @@ public abstract class CommandFactory {
             new Play(),
             new Skip(),
             new Info(),
+            new Jump(),
             new Queue(),
             new Insert(),
             new Prev(),

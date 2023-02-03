@@ -33,7 +33,7 @@ public abstract class Utils {
 
     public static Duration calculateFullTime(TrackScheduler scheduler) {
         Duration fullDuration = new Duration(0);
-        for (int i = 1; i < scheduler.getPlaylistSize(); ++i) {
+        for (int i = 1; i <= scheduler.getPlaylistSize(); ++i) {
             fullDuration.add(scheduler.getTrack(i).getDuration());
         }
         return fullDuration;

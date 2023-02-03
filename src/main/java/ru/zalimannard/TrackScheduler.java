@@ -123,11 +123,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (playlist.size() == 0) {
-            isTrackLooped = false;
-            isQueueLooped = false;
-            guild.getAudioManager().closeAudioConnection();
-        } else if (isTrackLooped) {
+        if (isTrackLooped) {
             play(currentTrackNumber);
         } else if ((isQueueLooped) && (currentTrackNumber == playlist.size())) {
             play(1);
@@ -135,6 +131,9 @@ public class TrackScheduler extends AudioEventAdapter {
             play(currentTrackNumber + 1);
         } else {
             clear();
+            isTrackLooped = false;
+            isQueueLooped = false;
+            guild.getAudioManager().closeAudioConnection();
         }
     }
 
@@ -159,7 +158,9 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     private void finishTrack() {
-        long currentTrackDurationMs = player.getPlayingTrack().getDuration();
-        setCurrentTrackTimePosition(new Duration(currentTrackDurationMs - 1));
+        if (player.getPlayingTrack() != null) {
+            long currentTrackDurationMs = player.getPlayingTrack().getDuration();
+            setCurrentTrackTimePosition(new Duration(currentTrackDurationMs - 1));
+        }
     }
 }

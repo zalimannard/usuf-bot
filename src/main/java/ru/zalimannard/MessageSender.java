@@ -3,6 +3,7 @@ package ru.zalimannard;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.commands.*;
@@ -19,6 +20,7 @@ public class MessageSender {
     private final Color badColor = Color.decode("#FF0000");
     private MessageChannel currentMessageChannel;
     private final Guild guild;
+    private Message previousNowPlaying;
 
     public MessageSender(String commandPrefix, MessageChannel currentMessageChannel, Guild guild) {
         this.commandPrefix = commandPrefix;
@@ -96,8 +98,8 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
     }
 
-    public void sendCurrentTrackInfo(Track track, int queueNumber, int queueSize, boolean isTrackLooped,
-                                     boolean isQueueLooped) {
+    public void sendNowPlaying(Track track, int queueNumber, int queueSize, boolean isTrackLooped,
+                               boolean isQueueLooped) {
         EmbedBuilder trackAddedEmbed = new EmbedBuilder();
         trackAddedEmbed.setColor(goodColor);
         trackAddedEmbed.setTitle("Сейчас играет:");
@@ -132,7 +134,20 @@ public class MessageSender {
             trackAddedEmbed.setFooter(footerText);
         }
 
-        getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();
+        deletePreviousNowPlaying();
+        try {
+            previousNowPlaying =
+                    getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit().get();
+        } catch (Exception e) {
+            // Неотправленное сообщение не повод вылетать
+        }
+    }
+
+    public void deletePreviousNowPlaying() {
+        if (previousNowPlaying != null) {
+            previousNowPlaying.delete().submit();
+            previousNowPlaying = null;
+        }
     }
 
     public MessageChannel getCurrentMessageChannel() {

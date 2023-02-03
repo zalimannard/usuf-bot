@@ -18,6 +18,8 @@ public class Main {
                 .addEventListeners(new EventHandler(prefix))
                 .setActivity(Activity.listening(prefix + "help"))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+                .enableIntents(GatewayIntent.GUILD_MESSAGES)
+                .enableIntents(GatewayIntent.DIRECT_MESSAGES)
                 .build();
     }
 }

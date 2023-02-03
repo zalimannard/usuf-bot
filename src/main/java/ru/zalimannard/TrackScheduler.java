@@ -135,6 +135,7 @@ public class TrackScheduler extends AudioEventAdapter {
             clear();
             isTrackLooped = false;
             isQueueLooped = false;
+            PlayerManagerManager.getInstance().getMessageSender(guild.getId()).deletePreviousNowPlaying();
             guild.getAudioManager().closeAudioConnection();
         }
     }
@@ -146,7 +147,7 @@ public class TrackScheduler extends AudioEventAdapter {
                     .loadAndPlay(guild, playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
             // Сообщение о запущенном треке
             MessageSender messageSender = PlayerManagerManager.getInstance().getMessageSender(guild.getId());
-            messageSender.sendCurrentTrackInfo(playlist.get(currentTrackNumber - 1), currentTrackNumber,
+            messageSender.sendNowPlaying(playlist.get(currentTrackNumber - 1), currentTrackNumber,
                     playlist.size(), isTrackLooped, isQueueLooped);
 
             if (currentTrackNumber < playlist.size()) {

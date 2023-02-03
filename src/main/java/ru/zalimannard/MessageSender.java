@@ -70,7 +70,8 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(helpEmbed.build()).submit();
     }
 
-    public void sendTrackAdded(Track track, int queueNumber, Duration timeTo) {
+    public void sendTrackAdded(TrackScheduler scheduler, int trackNumber) {
+        Track track = scheduler.getTrack(trackNumber);
         EmbedBuilder trackAddedEmbed = new EmbedBuilder();
         trackAddedEmbed.setColor(goodColor);
         trackAddedEmbed.setTitle("Трек добавлен:");
@@ -78,21 +79,20 @@ public class MessageSender {
         TrackLoader trackLoader = new TrackLoader();
         trackAddedEmbed.setThumbnail(trackLoader.getThumbnailUrl(track));
 
-        String mainLine = queueNumber + ". " + track.getTitle();
+        String mainLine = trackNumber + ". " + track.getTitle();
         String description = track.getAuthor() + "\n" + track.getUrl() + "\nПродолжительность: " + track.getDuration().getHmsFormat();
         trackAddedEmbed.addField(mainLine, description, false);
 
-        Member requester = guild.getMemberById(track.getRequesterId());
+        String footerText = "";
+        if (trackNumber > scheduler.getCurrentTrackNumber()) {
+            footerText += "Будет через: " + Utils.calculateTimeToTrack(scheduler, trackNumber).getHmsFormat() + "\n";
+        }
         try {
-            if (timeTo.getMilliseconds() > 0) {
-                trackAddedEmbed.setFooter(requester.getNickname() + "    Будет через: " + timeTo.getHmsFormat(), requester.getEffectiveAvatarUrl());
-            } else {
-                trackAddedEmbed.setFooter(requester.getNickname(), requester.getEffectiveAvatarUrl());
-            }
+            Member requester = guild.getMemberById(track.getRequesterId());
+            String requesterNickname = requester.getNickname() + "\n";
+            trackAddedEmbed.setFooter(requesterNickname + footerText, requester.getEffectiveAvatarUrl());
         } catch (Exception e) {
-            if (timeTo.getMilliseconds() > 0) {
-                trackAddedEmbed.setFooter("Будет через: " + timeTo.getHmsFormat());
-            }
+            trackAddedEmbed.setFooter(footerText);
         }
 
         getCurrentMessageChannel().sendMessageEmbeds(trackAddedEmbed.build()).submit();

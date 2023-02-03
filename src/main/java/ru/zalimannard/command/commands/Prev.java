@@ -20,7 +20,7 @@ public class Prev extends Command {
                                 Pattern.compile(" *")
                         )
                 )),
-                "Пропустить текущий трек",
+                "Перейти к предыдущему треку",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL,
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL

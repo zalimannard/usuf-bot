@@ -21,7 +21,7 @@ public class Jump extends Command {
                                 Pattern.compile("[0-9]+")
                         )
                 )),
-                "Пропустить текущий трек",
+                "Перейти к указанному треку",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL,
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL

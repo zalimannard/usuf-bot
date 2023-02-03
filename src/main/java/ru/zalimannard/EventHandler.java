@@ -8,9 +8,6 @@ import ru.zalimannard.command.CommandFactory;
 public class EventHandler extends ListenerAdapter {
     private final String prefix;
 
-    /**
-     * @param prefix the prefix. The bot only responds to messages starting with this line.
-     */
     public EventHandler(String prefix) {
         this.prefix = prefix;
     }

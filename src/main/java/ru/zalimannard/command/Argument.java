@@ -3,9 +3,6 @@ package ru.zalimannard.command;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-/**
- * The type Argument.
- */
 public class Argument {
     private final String text;
     private final Pattern pattern;

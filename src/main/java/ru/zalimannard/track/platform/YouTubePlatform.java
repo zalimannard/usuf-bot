@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * The class responsible for implementing the Platform interface for YouTube.
- */
 public class YouTubePlatform implements Platform {
     private final static ArrayList<String> PROTOCOLS = new ArrayList<>(Arrays.asList(
             "https://",
@@ -107,9 +104,7 @@ public class YouTubePlatform implements Platform {
         ArrayList<String> videoIds = new ArrayList<>();
         if (isPlaylist(url)) {
             RequestPlaylistInfo requestPlaylistInfo = new RequestPlaylistInfo(id);
-            // YouTube downloads playlists poorly. A NullPointerException appears. Therefore, we separately select and
-            // specify the number of attempts. The chance that the error will appear more than once in a row is very
-            // small.
+            // Иногда он почему-то выбрасывает исключение. 5 попыток сильно минимизируют шанс этого
             Response<PlaylistInfo> response;
             PlaylistInfo playlistInfo;
             List<PlaylistVideoDetails> videos;

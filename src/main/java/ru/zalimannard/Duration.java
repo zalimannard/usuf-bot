@@ -39,10 +39,6 @@ public class Duration {
         return millisecondsInHms;
     }
 
-    /**
-     * @return returns true if the string satisfies one of the formats: (H...)H:MM:SS, (M)M:SS, (S)S. Hours - any
-     * number, minutes less than 60, seconds less than 60, all not less than 0.
-     */
     public static boolean isCorrectDuration(String hmsString) {
         if (!isCorrectDurationStructure(hmsString)) {
             return false;
@@ -86,17 +82,11 @@ public class Duration {
         milliseconds += other.getMilliseconds();
     }
 
-    /**
-     * Duration can't be negative. Therefore, the values <0 become 0
-     */
     public void sub(Duration other) {
         milliseconds -= other.milliseconds;
         milliseconds = Math.max(0, milliseconds);
     }
 
-    /**
-     * @return the duration in the format (H...)H:MM:SS or (M)M:SS if the hours are 0
-     */
     public String getHmsFormat() {
         long totalSeconds = milliseconds / 1000;
         long totalMinutes = totalSeconds / 60;

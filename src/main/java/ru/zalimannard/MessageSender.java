@@ -185,6 +185,9 @@ public class MessageSender {
         getCurrentMessageChannel().sendMessageEmbeds(trackInfoEmbed.build()).submit();
     }
 
+    public void sendQueue(TrackScheduler scheduler, int first, int last) {
+    }
+
     public void deletePreviousNowPlaying() {
         if (previousNowPlaying != null) {
             previousNowPlaying.delete().submit();

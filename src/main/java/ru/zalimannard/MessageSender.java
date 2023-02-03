@@ -117,7 +117,7 @@ public class MessageSender {
         nowPlayingEmbed.setImage(trackLoader.getImageUrl(track));
 
         String footerText = "";
-        if (scheduler.isQueueLooped()) {
+        if (scheduler.isTrackLooped()) {
             footerText += "Трек зациклен\n";
         }
         if (scheduler.isQueueLooped()) {
@@ -162,7 +162,7 @@ public class MessageSender {
         trackInfoEmbed.setThumbnail(trackLoader.getThumbnailUrl(scheduler.getTrack(trackNumber)));
 
         String footerText = "";
-        if (scheduler.isQueueLooped()) {
+        if (scheduler.isTrackLooped()) {
             footerText += "Трек зациклен\n";
         }
         if (scheduler.isQueueLooped()) {

@@ -33,8 +33,8 @@ public class Prev extends Command {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
             TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
             if (trackScheduler.getCurrentTrackNumber() > 1) {
-                trackScheduler.jump(trackScheduler.getCurrentTrackNumber() - 1);
                 trackScheduler.setTrackLooped(false);
+                trackScheduler.jump(trackScheduler.getCurrentTrackNumber() - 1);
             } else {
                 getMessageSender(member.getGuild()).sendError("Сейчас играет первый трек в очереди");
             }

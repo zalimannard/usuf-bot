@@ -7,12 +7,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class Main {
 
     public static void main(String[] args) {
-        if (args.length != 2) {
-            return;
-        }
-
-        final String prefix = args[0];
-        final String token = args[1];
+        final String prefix = System.getenv("PREFIX");
+        final String token = System.getenv("TOKEN");
 
         JDABuilder.createDefault(token)
                 .addEventListeners(new EventHandler(prefix))

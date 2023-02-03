@@ -1,0 +1,10 @@
+version: '3.1'
+
+services:
+  usuf-bot:
+    build:
+      context: .
+    environment:
+      - PREFIX
+      - TOKEN
+    restart: unless-stopped

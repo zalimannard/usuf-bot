@@ -57,8 +57,7 @@ public class TrackScheduler extends AudioEventAdapter {
             // Текущая дорожка удаляется последней чтобы не началось новое воспроизведение
             if (playlist.size() == 1) {
                 remove(1);
-            }
-            else if (playlist.size() == currentTrackNumber) {
+            } else if (playlist.size() == currentTrackNumber) {
                 remove(playlist.size() - 1);
             } else {
                 remove(playlist.size());

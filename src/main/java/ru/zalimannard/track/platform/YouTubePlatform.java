@@ -32,7 +32,7 @@ public class YouTubePlatform implements Platform {
             "www.youtube.com/playlist?list=",
             "youtube.com/playlist?list=",
             "youtu.be/"
-            ));
+    ));
     private final static ArrayList<String> PARAMETER_SEPARATOR = new ArrayList<>(Arrays.asList(
             "&",
             "?"

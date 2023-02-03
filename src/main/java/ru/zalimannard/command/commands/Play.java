@@ -2,7 +2,6 @@ package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.managers.AudioManager;
-import ru.zalimannard.Utils;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -49,20 +48,17 @@ public class Play extends Command {
             }
             if (tracksToAdd.size() == 0) {
                 // Невозможно добавить трек
-                getMessageSender(member.getGuild()).sendError("Ничего не добавлено");
+                messageSender.sendError("Ничего не добавлено");
             } else if (tracksToAdd.size() == 1) {
                 // Добавление одного трека
-                getMessageSender(member.getGuild()).sendTrackAdded(tracksToAdd.get(0),
-                        getTrackScheduler(member.getGuild()).getPlaylistSize() + 1,
-                        Utils.calculateTimeToTrack(getTrackScheduler(member.getGuild()),
-                                getTrackScheduler(member.getGuild()).getPlaylistSize() + 1));
-                getTrackScheduler(member.getGuild()).insert(tracksToAdd.get(0));
+                scheduler.insert(tracksToAdd.get(0));
+                messageSender.sendTrackAdded(scheduler, scheduler.getPlaylistSize());
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } else {
                 // Добавление нескольких треков
-                getMessageSender(member.getGuild()).sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
+                messageSender.sendMessage("Добавлено " + tracksToAdd.size() + " трека(ов)");
                 for (Track trackToAdd : tracksToAdd) {
-                    getTrackScheduler(member.getGuild()).insert(trackToAdd);
+                    scheduler.insert(trackToAdd);
                 }
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             }
@@ -73,11 +69,12 @@ public class Play extends Command {
                 ArrayList<Track> tracksFound = youTubePlatform.search(textArgument);
                 Track trackToAdd = new Track(tracksFound.get(0), member.getId());
 
-                getTrackScheduler(member.getGuild()).insert(trackToAdd);
-                getMessageSender(member.getGuild()).sendTrackAdded(trackToAdd, getTrackScheduler(member.getGuild()).getPlaylistSize(), Utils.calculateTimeToTrack(getTrackScheduler(member.getGuild()), getTrackScheduler(member.getGuild()).getPlaylistSize()));
+                scheduler.insert(trackToAdd);
+                messageSender.sendTrackAdded(scheduler,
+                        scheduler.getPlaylistSize());
                 audioManager.openAudioConnection(member.getVoiceState().getChannel());
             } catch (Exception e) {
-                getMessageSender(member.getGuild()).sendError("Упс, запрос не сработал. Попробуйте по-другому");
+                messageSender.sendError("Упс, запрос не сработал. Попробуйте по-другому");
             }
         }
     }

@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public class Argument {
     private final String text;
     private final Pattern pattern;
+
     public Argument(String text, Pattern pattern) {
         this.text = text;
         this.pattern = pattern;

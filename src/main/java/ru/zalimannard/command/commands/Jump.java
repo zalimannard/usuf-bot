@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class Clear extends Command {
-    public Clear() {
+public class Jump extends Command {
+    public Jump() {
         super(
-                new ArrayList<>(Arrays.asList("clear", "c")),
+                new ArrayList<>(Arrays.asList("jump", "j")),
                 new ArrayList<>(Arrays.asList(
                         new Argument(
-                                " ",
-                                Pattern.compile(" *")
+                                "№",
+                                Pattern.compile("[0-9]+")
                         )
                 )),
-                "Очистить очередь",
+                "Перейти к указанному треку",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL,
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL
@@ -30,8 +30,13 @@ public class Clear extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            scheduler.clear();
-            messageSender.sendMessage("Очередь очищена");
+            int number = Integer.parseInt(textArgument);
+            if ((number >= 1) && (number <= scheduler.getPlaylistSize())) {
+                scheduler.setTrackLooped(false);
+                scheduler.jump(number);
+            } else {
+                messageSender.sendError("Трека с таким номером нет");
+            }
         }
     }
 }

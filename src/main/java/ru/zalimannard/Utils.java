@@ -18,10 +18,10 @@ public abstract class Utils {
     public static Duration calculateTimeToTrack(TrackScheduler scheduler, int trackNumberInQueue) {
         Duration timeToTrack = new Duration(0);
         if (trackNumberInQueue > scheduler.getCurrentTrackNumber()) {
-            if (scheduler.getCurrentTrackNumber() > 0){
+            if (scheduler.getCurrentTrackNumber() > 0) {
                 Duration remainingTimeCurrentTrack = scheduler.getCurrentTrack().getDuration();
-                remainingTimeCurrentTrack.sub(scheduler.getCurrentTrackTimePosition());
                 timeToTrack.add(remainingTimeCurrentTrack);
+                timeToTrack.sub(scheduler.getCurrentTrackTimePosition());
             }
 
             for (int i = scheduler.getCurrentTrackNumber() + 1; i < trackNumberInQueue; ++i) {
@@ -29,6 +29,14 @@ public abstract class Utils {
             }
         }
         return timeToTrack;
+    }
+
+    public static Duration calculateFullTime(TrackScheduler scheduler) {
+        Duration fullDuration = new Duration(0);
+        for (int i = 1; i <= scheduler.getPlaylistSize(); ++i) {
+            fullDuration.add(scheduler.getTrack(i).getDuration());
+        }
+        return fullDuration;
     }
 
     public static String russianToEnglish(String string) {

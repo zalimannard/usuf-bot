@@ -27,7 +27,7 @@ public class Help extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            getMessageSender(member.getGuild()).sendHelp();
+            messageSender.sendHelp();
         }
     }
 }

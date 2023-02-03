@@ -1,7 +1,6 @@
 package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -31,12 +30,11 @@ public class Loop extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            trackScheduler.setTrackLooped(!trackScheduler.isTrackLooped());
-            if (trackScheduler.isTrackLooped()) {
-                getMessageSender(member.getGuild()).sendMessage("Зацикливание трека включено");
+            scheduler.setTrackLooped(!scheduler.isTrackLooped());
+            if (scheduler.isTrackLooped()) {
+                messageSender.sendMessage("Зацикливание трека включено");
             } else {
-                getMessageSender(member.getGuild()).sendMessage("Зацикливание трека отключено");
+                messageSender.sendMessage("Зацикливание трека отключено");
             }
         }
     }

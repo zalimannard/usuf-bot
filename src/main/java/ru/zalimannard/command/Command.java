@@ -10,6 +10,9 @@ import ru.zalimannard.Utils;
 import java.util.ArrayList;
 
 public abstract class Command {
+    protected TrackScheduler scheduler;
+    protected MessageSender messageSender;
+    protected Guild guild;
     private final ArrayList<String> names;
     private final ArrayList<Argument> arguments;
     private final String description;
@@ -24,20 +27,23 @@ public abstract class Command {
     }
 
     public void execute(Member member, String textArgument) {
+        guild = member.getGuild();
+        scheduler = PlayerManagerManager.getInstance()
+                .getPlayerManager(guild.getId()).getMusicManager(guild).getScheduler();
+        messageSender = PlayerManagerManager.getInstance().getMessageSender(guild.getId());
+
         ArrayList<Requirement> requirements = getRequirements();
         for (Requirement requirement : requirements) {
             switch (requirement) {
                 case REQUESTER_IN_THE_VOICE_CHANNEL:
                     if (!member.getVoiceState().inAudioChannel()) {
-                        getMessageSender(member.getGuild())
-                                .sendError("Команду можно вызвать только из голосового канала");
+                        messageSender.sendError("Команду можно вызвать только из голосового канала");
                         return;
                     }
                     break;
                 case BOT_IN_THE_VOICE_CHANNEL:
                     if (!member.getGuild().getAudioManager().isConnected()) {
-                        getMessageSender(member.getGuild())
-                                .sendError("Бот должен быть в голосовом канале");
+                        messageSender.sendError("Бот должен быть в голосовом канале");
                         return;
                     }
                     break;
@@ -52,8 +58,7 @@ public abstract class Command {
             }
         }
         if (wrongArgumentCount == getArguments().size()) {
-            getMessageSender(member.getGuild())
-                    .sendError("Неверные аргументы");
+            messageSender.sendError("Неверные аргументы");
             return;
         }
         onExecute(member, textArgument);
@@ -93,13 +98,4 @@ public abstract class Command {
     }
 
     protected abstract void onExecute(Member member, String textArgument);
-
-    protected MessageSender getMessageSender(Guild guild) {
-        return PlayerManagerManager.getInstance().getMessageSender(guild.getId());
-    }
-
-    protected TrackScheduler getTrackScheduler(Guild guild) {
-        return PlayerManagerManager.getInstance()
-                .getPlayerManager(guild.getId()).getMusicManager(guild).getScheduler();
-    }
 }

@@ -1,7 +1,6 @@
 package ru.zalimannard.command.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -20,7 +19,7 @@ public class Prev extends Command {
                                 Pattern.compile(" *")
                         )
                 )),
-                "Пропустить текущий трек",
+                "Перейти к предыдущему треку",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL,
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL
@@ -31,12 +30,11 @@ public class Prev extends Command {
     @Override
     protected void onExecute(Member member, String textArgument) {
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            TrackScheduler trackScheduler = getTrackScheduler(member.getGuild());
-            if (trackScheduler.getCurrentTrackNumber() > 1) {
-                trackScheduler.setTrackLooped(false);
-                trackScheduler.jump(trackScheduler.getCurrentTrackNumber() - 1);
+            if (scheduler.getCurrentTrackNumber() > 1) {
+                scheduler.setTrackLooped(false);
+                scheduler.jump(scheduler.getCurrentTrackNumber() - 1);
             } else {
-                getMessageSender(member.getGuild()).sendError("Сейчас играет первый трек в очереди");
+                messageSender.sendError("Сейчас играет первый трек в очереди");
             }
         }
     }

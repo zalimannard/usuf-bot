@@ -57,8 +57,7 @@ public class TrackScheduler extends AudioEventAdapter {
             // Текущая дорожка удаляется последней чтобы не началось новое воспроизведение
             if (playlist.size() == 1) {
                 remove(1);
-            }
-            else if (playlist.size() == currentTrackNumber) {
+            } else if (playlist.size() == currentTrackNumber) {
                 remove(playlist.size() - 1);
             } else {
                 remove(playlist.size());
@@ -74,8 +73,10 @@ public class TrackScheduler extends AudioEventAdapter {
             playlist.remove(number - 1);
             if (number <= currentTrackNumber) {
                 --currentTrackNumber;
-            }
-            if (number == currentTrackNumber + 1) {
+                if (number == currentTrackNumber + 1) {
+                    finishTrack();
+                }
+            } else if (number == currentTrackNumber) {
                 finishTrack();
             }
         }
@@ -147,8 +148,7 @@ public class TrackScheduler extends AudioEventAdapter {
                     .loadAndPlay(guild, playlist.get(currentTrackNumber - 1).getTrackFile().getAbsolutePath());
             // Сообщение о запущенном треке
             MessageSender messageSender = PlayerManagerManager.getInstance().getMessageSender(guild.getId());
-            messageSender.sendNowPlaying(playlist.get(currentTrackNumber - 1), currentTrackNumber,
-                    playlist.size(), isTrackLooped, isQueueLooped);
+            messageSender.sendNowPlaying(this);
 
             if (currentTrackNumber < playlist.size()) {
                 // Неявная предзагрузка следующего трека

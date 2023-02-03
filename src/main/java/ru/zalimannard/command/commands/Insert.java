@@ -6,6 +6,7 @@ import ru.zalimannard.MessageSender;
 import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
+import ru.zalimannard.command.Requirement;
 import ru.zalimannard.track.Track;
 import ru.zalimannard.track.TrackLoader;
 import ru.zalimannard.track.platform.YouTubePlatform;
@@ -38,6 +39,8 @@ public class Insert extends Command {
                 )),
                 "Вставить трек по ссылке/запросу после текущего/указанного трека",
                 new ArrayList<>(Arrays.asList(
+                        Requirement.BOT_IN_THE_VOICE_CHANNEL,
+                        Requirement.REQUESTER_IN_THE_VOICE_CHANNEL
                 ))
         );
     }

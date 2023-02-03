@@ -215,9 +215,18 @@ public class YouTubePlatform implements Platform {
     }
 
     private VideoInfo getVideoInfo(String videoId) {
-        YoutubeDownloader youtubeDownloader = new YoutubeDownloader();
-        RequestVideoInfo requestVideoInfo = new RequestVideoInfo(videoId);
-        Response<VideoInfo> response = youtubeDownloader.getVideoInfo(requestVideoInfo);
+        Response<VideoInfo> response = null;
+        // Иногда в ответе возвращается null, хотя не должен. Повтор 5 раз сильно уменьшает шанс ошибки
+        for (int i = 0; i < 5; ++i) {
+            YoutubeDownloader youtubeDownloader = new YoutubeDownloader();
+            RequestVideoInfo requestVideoInfo = new RequestVideoInfo(videoId);
+            response = youtubeDownloader.getVideoInfo(requestVideoInfo);
+            if (response != null) {
+                if (response.data() != null) {
+                    break;
+                }
+            }
+        }
         return response.data();
     }
 

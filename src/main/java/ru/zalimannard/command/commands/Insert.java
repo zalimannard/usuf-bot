@@ -6,9 +6,9 @@ import ru.zalimannard.MessageSender;
 import ru.zalimannard.TrackScheduler;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
-import ru.zalimannard.command.Requirement;
 import ru.zalimannard.track.Track;
 import ru.zalimannard.track.TrackLoader;
+import ru.zalimannard.track.platform.YouTubePlatform;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,17 +28,16 @@ public class Insert extends Command {
                                 Pattern.compile("[0-9]+ (https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
                         ),
                         new Argument(
-                                "Запрос",
-                                Pattern.compile("[ a-zA-Zа-яА-ЯЁ0-9+&@#/%?=~_|!:,.;(){}<>\\[\\]\"'-]+")
-                        ),
-                        new Argument(
                                 "№ Запрос",
                                 Pattern.compile("[0-9]+[ a-zA-Zа-яА-ЯЁ0-9+&@#/%?=~_|!:,.;(){}<>\\[\\]\"'-]+")
+                        ),
+                        new Argument(
+                                "Запрос",
+                                Pattern.compile("[ a-zA-Zа-яА-ЯЁ0-9+&@#/%?=~_|!:,.;(){}<>\\[\\]\"'-]+")
                         )
                 )),
                 "Вставить трек по ссылке/запросу после текущего/указанного трека",
                 new ArrayList<>(Arrays.asList(
-                        Requirement.BOT_IN_THE_VOICE_CHANNEL
                 ))
         );
     }
@@ -101,9 +100,34 @@ public class Insert extends Command {
             }
 
         } else if (getArguments().get(2).getPattern().matcher(textArgument).matches()) {
+            int numberBefore = Integer.parseInt(textArgument.split(" ")[0]);
+            String request = textArgument.substring(textArgument.indexOf(' ') + 1).trim();
+            YouTubePlatform youTubePlatform = new YouTubePlatform();
+
+            try {
+                ArrayList<Track> tracksFound = youTubePlatform.search(request);
+                Track trackToAdd = new Track(tracksFound.get(0), member.getId());
+
+                scheduler.insert(numberBefore, trackToAdd);
+                messageSender.sendTrackAdded(scheduler, numberBefore + 1);
+                audioManager.openAudioConnection(member.getVoiceState().getChannel());
+            } catch (Exception e) {
+                getMessageSender(member.getGuild()).sendError("Упс, запрос не сработал. Попробуйте по-другому");
+            }
 
         } else if (getArguments().get(3).getPattern().matcher(textArgument).matches()) {
+            YouTubePlatform youTubePlatform = new YouTubePlatform();
 
+            try {
+                ArrayList<Track> tracksFound = youTubePlatform.search(textArgument);
+                Track trackToAdd = new Track(tracksFound.get(0), member.getId());
+
+                scheduler.insert(scheduler.getCurrentTrackNumber(), trackToAdd);
+                messageSender.sendTrackAdded(scheduler, scheduler.getCurrentTrackNumber() + 1);
+                audioManager.openAudioConnection(member.getVoiceState().getChannel());
+            } catch (Exception e) {
+                getMessageSender(member.getGuild()).sendError("Упс, запрос не сработал. Попробуйте по-другому");
+            }
         }
     }
 }

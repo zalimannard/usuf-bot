@@ -15,6 +15,7 @@ public abstract class CommandFactory {
             new Insert(),
             new Remove(),
             new Prev(),
+            new Rewind(),
             new Loop(),
             new Loopq(),
             new Clear(),

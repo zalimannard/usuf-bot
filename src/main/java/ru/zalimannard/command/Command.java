@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Member;
 import ru.zalimannard.MessageSender;
 import ru.zalimannard.PlayerManagerManager;
 import ru.zalimannard.TrackScheduler;
+import ru.zalimannard.Utils;
 
 import java.util.ArrayList;
 
@@ -59,7 +60,8 @@ public abstract class Command {
     }
 
     public String isThisCommand(String text) {
-        String trimmedText = text.trim();
+        String russianToEnglish = Utils.russianToEnglish(text);
+        String trimmedText = russianToEnglish.trim();
         for (String commandName : getNames()) {
             if (trimmedText.startsWith(commandName)) {
                 if (commandName.length() != trimmedText.length()) {

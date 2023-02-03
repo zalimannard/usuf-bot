@@ -28,4 +28,15 @@ public abstract class Utils {
         }
         return timeToTrack;
     }
+
+    public static String russianToEnglish(String string) {
+        String russian = "йцукенгшщзфывапролдячсмитьЙЦУКЕНГШЩЗФЫВАПРОЛДЯЧСМИТЬ";
+        String english = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+
+        for (int i = 0; i < russian.length(); ++i) {
+            string = string.replace(russian.charAt(i), english.charAt(i));
+        }
+
+        return string;
+    }
 }

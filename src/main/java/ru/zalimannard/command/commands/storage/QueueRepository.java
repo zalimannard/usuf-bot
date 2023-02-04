@@ -52,7 +52,8 @@ public class QueueRepository {
     }
 
     private List<QueueEntity> read(String guildId) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("queues-" + guildId + ".txt"));
+        File file = new File("/opt/usuf-bot/queues/queues-" + guildId + ".txt");
+        BufferedReader reader = new BufferedReader(new FileReader(file));
         List<QueueEntity> queues = new ArrayList<>();
 
         int nQueue = Integer.parseInt(reader.readLine());
@@ -75,7 +76,8 @@ public class QueueRepository {
     }
 
     private void write(String guildId, List<QueueEntity> queueEntities) throws IOException {
-        FileWriter writer = new FileWriter("queues-" + guildId + ".txt", false);
+        File file = new File("/opt/usuf-bot/queues/queues-" + guildId + ".txt");
+        FileWriter writer = new FileWriter(file);
         writer.write(queueEntities.size() + "\n");
         for (int i = 0; i < queueEntities.size(); ++i) {
             writer.write(queueEntities.get(i).getTitle() + "\n");

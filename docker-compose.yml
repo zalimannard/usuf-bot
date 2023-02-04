@@ -7,4 +7,6 @@ services:
     environment:
       - PREFIX
       - TOKEN
+    volumes:
+      - ./queues/:/opt/usuf-bot/queues/
     restart: unless-stopped

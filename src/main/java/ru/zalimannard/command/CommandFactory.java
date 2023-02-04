@@ -1,6 +1,10 @@
 package ru.zalimannard.command;
 
 import ru.zalimannard.command.commands.*;
+import ru.zalimannard.command.commands.storage.DeleteSavedQueue;
+import ru.zalimannard.command.commands.storage.Load;
+import ru.zalimannard.command.commands.storage.Save;
+import ru.zalimannard.command.commands.storage.Show;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +24,10 @@ public abstract class CommandFactory {
             new Loop(),
             new Loopq(),
             new Clear(),
+            new Save(),
+            new Show(),
+            new Load(),
+            new DeleteSavedQueue(),
             new Help()
     ));
 

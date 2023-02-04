@@ -1,7 +1,6 @@
 package ru.zalimannard.command.commands.storage;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class QueueRepository {
     }
 
     public void save(String guildId, QueueEntity queueEntity) throws IOException {
-        List<QueueEntity> queues = new ArrayList<>();
+        List<QueueEntity> queues = read(guildId);
         queues.add(queueEntity);
         write(guildId, queues);
     }
@@ -24,8 +23,26 @@ public class QueueRepository {
 
     }
 
-    private List<QueueEntity> read(String guildId) {
-        return new ArrayList<>();
+    private List<QueueEntity> read(String guildId) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("queues-" + guildId + ".txt"));
+        List<QueueEntity> queues = new ArrayList<>();
+
+        int nQueue = Integer.parseInt(reader.readLine());
+        for (int i = 0; i < nQueue; ++i) {
+            String queueTitle = reader.readLine();
+            String queueDescription = reader.readLine();
+            int nTrack = Integer.parseInt(reader.readLine());
+            QueueEntity queueEntity = new QueueEntity(queueTitle, queueDescription);
+            for (int j = 0; j < nTrack; ++j) {
+                String trackTitle = reader.readLine();
+                String trackUrl = reader.readLine();
+                TrackEntity track = new TrackEntity(trackTitle, trackUrl);
+                queueEntity.addTrackEntity(track);
+            }
+            queues.add(queueEntity);
+        }
+        reader.close();
+        return queues;
     }
 
     private void write(String guildId, List<QueueEntity> queueEntities) throws IOException {

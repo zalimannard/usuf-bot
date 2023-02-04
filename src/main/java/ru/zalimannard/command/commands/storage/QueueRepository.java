@@ -38,8 +38,10 @@ public class QueueRepository {
         write(guildId, clonedQueues);
     }
 
-    public void remove(String guildId, int index) {
-
+    public void remove(String guildId, int index) throws IOException {
+        List<QueueEntity> queues = read(guildId);
+        queues.remove(index);
+        write(guildId, queues);
     }
 
     private List<QueueEntity> read(String guildId) throws IOException {

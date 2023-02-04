@@ -52,7 +52,7 @@ public class Load extends Command {
         } catch (IllegalArgumentException e) {
             messageSender.sendError(e.getMessage());
         } catch (IOException e) {
-            messageSender.sendMessage("Ошибка при загрузке очереди");
+            messageSender.sendError("Ошибка при загрузке очереди");
         }
     }
 }

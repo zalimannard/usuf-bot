@@ -2,7 +2,7 @@
 
 # :musical_note: Usuf Bot
 
-*Self-hosted Discord music bot*
+*Музыкальный бот для Дискорда*
 
 [![Open issues](https://img.shields.io/github/issues/zalimannard/usuf-bot)](https://github.com/zalimannard/usuf-bot/issues)
 [![Stars](https://img.shields.io/github/stars/zalimannard/usuf-bot)](https://github.com/zalimannard/usuf-bot)
@@ -11,75 +11,48 @@
 
 </div>
 
-The music bot we used was blocked by YouTube. As a local alternative, I made this bot. The project is made for educational purposes, all actions you do at your own risk. Using a bot to listen to Youtube videos is contrary to the [Terms of Service - II. Prohibitions](https://developers.google.com/youtube/terms/api-services-terms-of-service).
+Замена боту Rythm, которого заблокировал Ютуб потому что он злой [Terms of Service - II. Prohibitions](https://developers.google.com/youtube/terms/api-services-terms-of-service).
 
-## :black_nib: Commands
+## :black_nib: Команды
 
-| Name | Arguments | Description |
+| Команда | Аргументы | Описание |
 | - | - | - |
-| `play` | `URL` | Add a track/playlist to the end of the queue using the link |
-| `clear` |  | Clear the queue |
-| `help` |  | Show the help menu |
+| `play`, `p` | `URL`, `Запрос` | Добавить трек(и) в конец очереди |
+| `skip`, `s` |  | Пропустить текущий трек |
+| `info`, `i` | `_`, `№` | Информация о текущем/указанном треке |
+| `jump`, `j` | `№` | Перейти к указанному треку |
+| `queue`, `q` | `_`, `[n]`, `b [n]`, `all` | Показать 10/n треков после/до текущего и всю очередь |
+| `insert`, `in` | `URL`, `№ URL`, `№ Запрос`, `Запрос` | Вставить трек по ссылке/запросу после текущего/указанного трека |
+| `remove`, `r` | `№`, `-№`, `№-`, `№-№` | Удалить трек/треки до/треки после/указанные |
+| `prev`, `pr` | `HH:MM:SS` | Перейти к предыдущему треку |
+| `rewind`, `rw` |  | Перемотать трек к указанной позиции. Точность указывайте сколько нужно |
+| `shuffle`, `sh` |  | Перемешать треки в очереди |
+| `loop`, `l` |  | Зациклить текущий трек |
+| `loopq`, `lq` |  | Зациклить очередь |
+| `clear`, `c` |  | Очистить очередь |
+| `save` | `Название`, `Название~Описание` | Сохранить текущую очередь |
+| `show` | `_`, `№` | Показать список сохранённых очередей/вывести 10 треков указанной |
+| `load` | `№` | Запустить указанную сохранённую очередь |
+| `deletesavedqueue` | `№` | Удалить очередь из сохранённых |
+| `help`, `h` |  | Открыть это меню |
 
-## :computer: Start
+## :computer: Запуск
 
-### Build and run from source
+Потребуется Java 19 и 7.6. Может запустится и на других, но я не проверял
 
 ```shell
 git clone https://github.com/zalimannard/usuf-bot.git
 cd usuf-bot
-gradle build -x test
-cd build/libs
-java -jar usuf-bot.jar INSERT_YOUR_PREFIX_HERE INSERT_YOUR_TOKEN_HERE
+bash start.sh *ПРЕФИКС* *ТОКЕН*
 ```
 
-### Don't you have a token? Get it now!
+## :syringe: Зависимости
 
-1. Go to the [Discord Developer Portal](https://discord.com/developers) and log in
-2. Click "New Application" and enter a name. Later you will be able to change the name of the bot
-3. Click "Bot" in the left menu.
-4. Click "Add bot" on the right
-5. Activate the "MESSAGE CONTENT INTENT" switch
-6. Click "Reset token" and your token will appear
+- [JDA](https://github.com/DV8FromTheWorld/JDA) - для создания бота
+- [lavaplayer](https://github.com/sedmelluq/lavaplayer) - для воспроизведения аудио
 
-### Do you have a token, but the bot is not on the server? Let's add it!
+- [java-youtube-downloader](https://github.com/sealedtx/java-youtube-downloader) - для скачивания с Ютуба
 
-1. Click "OAuth2" on the [Discord Developer Portal](https://discord.com/developers)
-2. Click "URL Generator"
-3. SCOPES > bot
-4. BOT PERMISSIONS > Administrator
-5. Follow the link that appears
-6. Select your Discord server
+## :pencil: Лицензия
 
-## :notebook: Documentation
-
-I would like to place Javadoc somehow in a smart way. But now I haven't come up with anything better than generating it from source:
-```shell
-git clone https://github.com/zalimannard/usuf-bot.git
-cd usuf-bot
-gradle javadoc
-```
-and open the file `./build/docs/javadoc/index.html`
-
-## :syringe: Dependencies
-
-- [JDA](https://github.com/DV8FromTheWorld/JDA) - to create a discord bot
-- [lavaplayer](https://github.com/sedmelluq/lavaplayer) - to work with audio files
-
-- [java-youtube-downloader](https://github.com/sealedtx/java-youtube-downloader) - to work with YouTube
-
-## :pager: Supported platforms
-
-- YouTube
-
-Adding new platforms is very simple. You need to take a library for it and make a wrapper. That is, to implement the Platform interface. If you want, you can do it yourself, or find a library for me and send an Issue.
-
-## :dancers: Contributing
-
-Want to help develop Usuf Bot? Download the sources, change them and send pull requests.
-
-If you find an issue, please report it on the [issue tracker](https://github.com/docker/compose/issues/new/choose).
-
-## :pencil: Licence
-
-This project is licensed under [MIT](https://github.com/zalimannard/usuf-bot/blob/main/LICENSE) license.
+Проект под [MIT](https://github.com/zalimannard/usuf-bot/blob/main/LICENSE) лицензией.

@@ -15,8 +15,22 @@ public class QueueRepository {
 
     public void save(String guildId, QueueEntity queueEntity) throws IOException {
         List<QueueEntity> queues = read(guildId);
-        queues.add(queueEntity);
-        write(guildId, queues);
+        // Для затирания предыдущей с таким же названием
+        boolean isExist = false;
+        List<QueueEntity> clonedQueues = new ArrayList<>();
+        for (int i = 0; i < queues.size(); ++i) {
+            if (queues.get(i).getTitle().equals(queueEntity.getTitle())) {
+                clonedQueues.add(queueEntity);
+                isExist = true;
+            } else {
+                clonedQueues.add(queues.get(i));
+            }
+        }
+        if (!isExist) {
+            clonedQueues.add(queueEntity);
+        }
+
+        write(guildId, clonedQueues);
     }
 
     public void remove(String guildId, int index) {

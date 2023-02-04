@@ -5,6 +5,7 @@ import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -33,10 +34,27 @@ public class Save extends Command {
 
     @Override
     protected void onExecute(Member member, String textArgument) {
+        QueueRepository repository = new QueueRepository();
+        QueueEntity queue = null;
+
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-
+            queue = new QueueEntity(textArgument, "");
         } else if (getArguments().get(1).getPattern().matcher(textArgument).matches()) {
+            queue = new QueueEntity(textArgument.split("~")[0], textArgument.split("~")[1]);
+        }
 
+        for (int i = 0; i < scheduler.getPlaylistSize(); ++i) {
+            TrackEntity track = new TrackEntity(
+                    scheduler.getTrack(i + 1).getTitle(),
+                    scheduler.getTrack(i + 1).getUrl());
+            queue.addTrackEntity(track);
+        }
+
+        try {
+            repository.save(member.getGuild().getId(), queue);
+            messageSender.sendMessage("Очередь сохранена");
+        } catch (IOException e) {
+            messageSender.sendError("Что-то пошло не так");
         }
     }
 }

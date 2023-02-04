@@ -5,12 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QueueRepository {
-    public List<QueueEntity> getAll(String guildId) {
-        return null;
+    public List<QueueEntity> getAll(String guildId) throws IOException {
+        return read(guildId);
     }
 
-    public QueueEntity get(String guildId, int index) {
-        return null;
+    public QueueEntity get(String guildId, int index) throws IOException {
+        List<QueueEntity> queues = getAll(guildId);
+        if ((index >= 0) && (index < queues.size())) {
+            return getAll(guildId).get(index);
+        } else {
+            throw new IllegalArgumentException("Неправильный номер очереди");
+        }
     }
 
     public void save(String guildId, QueueEntity queueEntity) throws IOException {

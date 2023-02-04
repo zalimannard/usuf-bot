@@ -33,12 +33,21 @@ public class Show extends Command {
     protected void onExecute(Member member, String textArgument) {
         QueueRepository repository = new QueueRepository();
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
+            try {
+                if (repository.getAll(member.getGuild().getId()).size() == 0) {
+                    messageSender.sendError("Нет сохранённых очередей");
+                } else {
+                    messageSender.sendSavedQueue(repository.getAll(member.getGuild().getId()));
+                }
+            } catch (IOException e) {
+                messageSender.sendError("Ошибка при считывании");
+            }
 
         } else if (getArguments().get(1).getPattern().matcher(textArgument).matches()) {
             try {
-                messageSender.sendShowSavedQueue(
-                        repository.get(member.getGuild().getId(),
-                                Integer.parseInt(textArgument) - 1));
+                messageSender.sendShowSavedQueue(repository.get(
+                        member.getGuild().getId(),
+                        Integer.parseInt(textArgument) - 1));
 
             } catch (IllegalArgumentException e) {
                 messageSender.sendError(e.getMessage());

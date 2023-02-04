@@ -15,6 +15,7 @@ import ru.zalimannard.track.TrackLoader;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MessageSender {
     private final String commandPrefix;
@@ -233,6 +234,33 @@ public class MessageSender {
         }
 
         getCurrentMessageChannel().sendMessageEmbeds(showSavedQueueEmbed.build()).submit();
+    }
+
+    public void sendSavedQueue(List<QueueEntity> queues) {
+        EmbedBuilder savedQueueEmbed = new EmbedBuilder();
+
+        int counter = 0;
+        for (int i = 0; i < queues.size(); ++i) {
+            ++counter;
+            String firstLine = (i + 1) + ". " + queues.get(i).getTitle();
+            String secondLine = queues.get(i).getDescription();
+            secondLine += "\n" + queues.get(i).getTrackEntity(0).getTitle();
+            if (queues.get(i).size() >= 2) {
+                secondLine += "\n" + queues.get(i).getTrackEntity(1).getTitle();
+            }
+            if (queues.get(i).size() >= 3) {
+                secondLine += "\n" + queues.get(i).getTrackEntity(2).getTitle();
+            }
+
+            savedQueueEmbed.addField(firstLine, secondLine, false);
+
+            if ((counter % 25 == 0) || (i == (queues.size() - 1))) {
+                savedQueueEmbed.setColor(goodColor);
+                savedQueueEmbed.setTitle("Сохранённые очереди:");
+                getCurrentMessageChannel().sendMessageEmbeds(savedQueueEmbed.build()).submit();
+                savedQueueEmbed = new EmbedBuilder();
+            }
+        }
     }
 
     public void deletePreviousNowPlaying() {

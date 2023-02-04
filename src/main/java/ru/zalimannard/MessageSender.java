@@ -8,12 +8,14 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.commands.Queue;
 import ru.zalimannard.command.commands.*;
+import ru.zalimannard.command.commands.storage.*;
 import ru.zalimannard.track.Track;
 import ru.zalimannard.track.TrackLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MessageSender {
     private final String commandPrefix;
@@ -46,7 +48,8 @@ public class MessageSender {
     public void sendHelp() {
         ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
                 new Play(), new Skip(), new Info(), new Jump(), new Queue(), new Insert(), new Remove(), new Prev(),
-                new Rewind(), new Shuffle(), new Loop(), new Loopq(), new Clear(), new Help()
+                new Rewind(), new Shuffle(), new Loop(), new Loopq(), new Clear(), new Save(), new Show(), new Load(),
+                new DeleteSavedQueue(), new Help()
         ));
         EmbedBuilder helpEmbed = new EmbedBuilder();
         helpEmbed.setColor(goodColor);
@@ -215,6 +218,47 @@ public class MessageSender {
                         ", на " + Utils.calculateFullTime(scheduler).getHmsFormat() + "):");
                 getCurrentMessageChannel().sendMessageEmbeds(queueEmbed.build()).submit();
                 queueEmbed = new EmbedBuilder();
+            }
+        }
+    }
+
+    public void sendShowSavedQueue(QueueEntity queue) {
+        EmbedBuilder showSavedQueueEmbed = new EmbedBuilder();
+        showSavedQueueEmbed.setColor(goodColor);
+        showSavedQueueEmbed.setTitle(queue.getTitle() + ". Всего " + queue.size() + ", на " + queue.getDuration().getHmsFormat() + ":");
+
+        for (int i = 0; i <= Math.min(queue.size(), 10); ++i) {
+            String firstLine = (i + 1) + ". " + queue.getTrackEntity(i).getTitle();
+            String secondLine = queue.getTrackEntity(i).getUrl();
+            showSavedQueueEmbed.addField(firstLine, secondLine, false);
+        }
+
+        getCurrentMessageChannel().sendMessageEmbeds(showSavedQueueEmbed.build()).submit();
+    }
+
+    public void sendSavedQueue(List<QueueEntity> queues) {
+        EmbedBuilder savedQueueEmbed = new EmbedBuilder();
+
+        int counter = 0;
+        for (int i = 0; i < queues.size(); ++i) {
+            ++counter;
+            String firstLine = (i + 1) + ". " + queues.get(i).getTitle();
+            String secondLine = queues.get(i).getDescription();
+            secondLine += "\n" + queues.get(i).getTrackEntity(0).getTitle();
+            if (queues.get(i).size() >= 2) {
+                secondLine += "\n" + queues.get(i).getTrackEntity(1).getTitle();
+            }
+            if (queues.get(i).size() >= 3) {
+                secondLine += "\n" + queues.get(i).getTrackEntity(2).getTitle();
+            }
+
+            savedQueueEmbed.addField(firstLine, secondLine, false);
+
+            if ((counter % 25 == 0) || (i == (queues.size() - 1))) {
+                savedQueueEmbed.setColor(goodColor);
+                savedQueueEmbed.setTitle("Сохранённые очереди:");
+                getCurrentMessageChannel().sendMessageEmbeds(savedQueueEmbed.build()).submit();
+                savedQueueEmbed = new EmbedBuilder();
             }
         }
     }

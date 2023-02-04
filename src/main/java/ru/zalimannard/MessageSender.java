@@ -224,7 +224,7 @@ public class MessageSender {
     public void sendShowSavedQueue(QueueEntity queue) {
         EmbedBuilder showSavedQueueEmbed = new EmbedBuilder();
         showSavedQueueEmbed.setColor(goodColor);
-        showSavedQueueEmbed.setTitle(queue.getTitle() + ". Всего " + queue.size() + ", на " + queue.getDuration().getHmsFormat() + "):");
+        showSavedQueueEmbed.setTitle(queue.getTitle() + ". Всего " + queue.size() + ", на " + queue.getDuration().getHmsFormat() + ":");
 
         for (int i = 0; i <= Math.min(queue.size(), 10); ++i) {
             String firstLine = (i + 1) + ". " + queue.getTrackEntity(i).getTitle();

@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Member;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -30,10 +31,20 @@ public class Show extends Command {
 
     @Override
     protected void onExecute(Member member, String textArgument) {
+        QueueRepository repository = new QueueRepository();
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
 
         } else if (getArguments().get(1).getPattern().matcher(textArgument).matches()) {
+            try {
+                messageSender.sendShowSavedQueue(
+                        repository.get(member.getGuild().getId(),
+                                Integer.parseInt(textArgument) - 1));
 
+            } catch (IllegalArgumentException e) {
+                messageSender.sendError(e.getMessage());
+            } catch (IOException e) {
+                messageSender.sendError("Ошибка при считывании");
+            }
         }
     }
 }

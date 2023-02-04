@@ -1,5 +1,7 @@
 package ru.zalimannard.command.commands.storage;
 
+import ru.zalimannard.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,11 +9,13 @@ import java.util.Objects;
 public class QueueEntity {
     private final String title;
     private final String description;
+    private final Duration duration;
     private final List<TrackEntity> tracks;
 
-    public QueueEntity(String title, String description) {
+    public QueueEntity(String title, String description, Duration duration) {
         this.title = title;
         this.description = description;
+        this.duration = duration;
         this.tracks = new ArrayList<>();
     }
 
@@ -21,6 +25,10 @@ public class QueueEntity {
 
     public String getDescription() {
         return description;
+    }
+
+    public Duration getDuration() {
+        return duration;
     }
 
     public int size() {

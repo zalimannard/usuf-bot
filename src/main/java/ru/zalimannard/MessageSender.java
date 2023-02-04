@@ -8,10 +8,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.commands.Queue;
 import ru.zalimannard.command.commands.*;
-import ru.zalimannard.command.commands.storage.DeleteSavedQueue;
-import ru.zalimannard.command.commands.storage.Load;
-import ru.zalimannard.command.commands.storage.Save;
-import ru.zalimannard.command.commands.storage.Show;
+import ru.zalimannard.command.commands.storage.*;
 import ru.zalimannard.track.Track;
 import ru.zalimannard.track.TrackLoader;
 
@@ -222,6 +219,20 @@ public class MessageSender {
                 queueEmbed = new EmbedBuilder();
             }
         }
+    }
+
+    public void sendShowSavedQueue(QueueEntity queue) {
+        EmbedBuilder showSavedQueueEmbed = new EmbedBuilder();
+        showSavedQueueEmbed.setColor(goodColor);
+        showSavedQueueEmbed.setTitle(queue.getTitle() + ". Всего " + queue.size() + ", на " + queue.getDuration().getHmsFormat() + "):");
+
+        for (int i = 0; i <= Math.min(queue.size(), 10); ++i) {
+            String firstLine = (i + 1) + ". " + queue.getTrackEntity(i).getTitle();
+            String secondLine = queue.getTrackEntity(i).getUrl();
+            showSavedQueueEmbed.addField(firstLine, secondLine, false);
+        }
+
+        getCurrentMessageChannel().sendMessageEmbeds(showSavedQueueEmbed.build()).submit();
     }
 
     public void deletePreviousNowPlaying() {

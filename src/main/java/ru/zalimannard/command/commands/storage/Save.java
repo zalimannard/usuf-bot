@@ -1,6 +1,8 @@
 package ru.zalimannard.command.commands.storage;
 
 import net.dv8tion.jda.api.entities.Member;
+import ru.zalimannard.Duration;
+import ru.zalimannard.Utils;
 import ru.zalimannard.command.Argument;
 import ru.zalimannard.command.Command;
 import ru.zalimannard.command.Requirement;
@@ -36,11 +38,12 @@ public class Save extends Command {
     protected void onExecute(Member member, String textArgument) {
         QueueRepository repository = new QueueRepository();
         QueueEntity queue = null;
+        Duration duration = Utils.calculateFullTime(scheduler);
 
         if (getArguments().get(0).getPattern().matcher(textArgument).matches()) {
-            queue = new QueueEntity(textArgument, "");
+            queue = new QueueEntity(textArgument, "", duration);
         } else if (getArguments().get(1).getPattern().matcher(textArgument).matches()) {
-            queue = new QueueEntity(textArgument.split("~")[0], textArgument.split("~")[1]);
+            queue = new QueueEntity(textArgument.split("~")[0], textArgument.split("~")[1], duration);
         }
 
         for (int i = 0; i < scheduler.getPlaylistSize(); ++i) {

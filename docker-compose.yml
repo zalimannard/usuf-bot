@@ -1,12 +1,14 @@
-version: '3.1'
+version: '3.8'
 
 services:
   usuf-bot:
+    container_name: usuf-bot
     build:
       context: .
+    image: zalimannard/usuf-bot
     environment:
-      - PREFIX
-      - TOKEN
+      - PREFIX=INSERT_PREFIX
+      - TOKEN=INSERT_TOKEN
     volumes:
       - ./queues/:/opt/usuf-bot/queues/
     restart: unless-stopped

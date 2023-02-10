@@ -19,11 +19,11 @@ public class Queue extends Command {
                                 Pattern.compile(" *")
                         ),
                         new Argument(
-                                "[n]",
+                                "*кол-во*",
                                 Pattern.compile("[0-9]+")
                         ),
                         new Argument(
-                                "b [n]",
+                                "b *кол-во*",
                                 Pattern.compile("b [0-9]+")
                         ),
                         new Argument(
@@ -31,7 +31,7 @@ public class Queue extends Command {
                                 Pattern.compile("all")
                         )
                 )),
-                "Показать 10/n треков после/до текущего и всю очередь",
+                "Показать 10 треков / n треков / n треков до текущего / всю очередь",
                 new ArrayList<>(Arrays.asList(
                         Requirement.BOT_IN_THE_VOICE_CHANNEL
                 ))

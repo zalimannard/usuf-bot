@@ -22,6 +22,11 @@ public class EventHandler extends ListenerAdapter {
             return;
         }
 
+        // hard shutdown
+        if (event.getMessage().getContentRaw().equals(prefix + "hardreset")) {
+            System.exit(0);
+        }
+
         String[] messageTextList = event.getMessage().getContentRaw().split("\n");
         for (String messageText : messageTextList) {
             messageText = messageText.trim();

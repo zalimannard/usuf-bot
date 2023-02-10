@@ -24,7 +24,7 @@ public class Play extends Command {
                         ),
                         new Argument(
                                 "Запрос",
-                                Pattern.compile("[ a-zA-Zа-яА-ЯЁ0-9+&@#/%?=~_|!:,.;(){}<>\\[\\]\"'-]+")
+                                Pattern.compile("[ a-zA-Zа-яА-ЯЁё0-9+&@#/%?=~_|!:,.;(){}<>\\[\\]\"'-]+")
                         )
                 )),
                 "Добавить трек(и) в конец очереди",

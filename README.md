@@ -35,6 +35,7 @@
 | `load` | `№` | Запустить указанную сохранённую очередь |
 | `deletesavedqueue` | `№` | Удалить очередь из сохранённых |
 | `help`, `h` |  | Открыть это меню |
+| `hardreset` |  | Полное принудительное выключение. Не показывается в help |
 
 ## :computer: Запуск
 
@@ -43,7 +44,26 @@
 ```shell
 git clone https://github.com/zalimannard/usuf-bot.git
 cd usuf-bot
-bash start.sh *ПРЕФИКС* *ТОКЕН*
+nvim docker-compose.yml
+# *Напишите файл конфигурации. Пример ниже*
+docker-compose up -d
+```
+
+### Пример docker-compose.yml
+
+```yml
+version: '3.8'
+
+services:
+  usuf-bot:
+    container_name: usuf-bot
+    image: zalimannard/usuf-bot
+    environment:
+      - PREFIX=-
+      - TOKEN=MTAyMzY5MzYyMzk2NTAwMzgyNg.G4Xv2E.pYfbxWh
+    volumes:
+      - ./queues/:/opt/usuf-bot/queues/
+    restart: unless-stopped
 ```
 
 ## :syringe: Зависимости

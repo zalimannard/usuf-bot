@@ -108,7 +108,7 @@ public class YouTubePlatform implements Platform {
             Response<PlaylistInfo> response;
             PlaylistInfo playlistInfo;
             List<PlaylistVideoDetails> videos;
-            int nAttempt = 5;
+            int nAttempt = 15;
             for (int attempt = 1; attempt <= nAttempt; ++attempt) {
                 try {
                     response = youtubeDownloader.getPlaylistInfo(requestPlaylistInfo);
@@ -131,7 +131,19 @@ public class YouTubePlatform implements Platform {
 
         for (String videoId : videoIds) {
             if (isDownloadable(videoId)) {
-                VideoDetails videoDetails = getVideoInfo(videoId).details();
+                int nAttempt = 15;
+                VideoInfo videoInfo;
+                VideoDetails videoDetails = null;
+                for (int i = 0; i < nAttempt; ++i) {
+                    videoInfo = getVideoInfo(videoId);
+                    if (videoInfo != null) {
+                        videoDetails = videoInfo.details();
+                        if (videoDetails != null) {
+                            break;
+                        }
+                    }
+                }
+
                 tracks.add(new Track(
                         videoDetails.title(),
                         videoDetails.author(),
@@ -216,9 +228,8 @@ public class YouTubePlatform implements Platform {
 
     private VideoInfo getVideoInfo(String videoId) {
         Response<VideoInfo> response = null;
-        // Иногда в ответе возвращается null, хотя не должен. Повтор 5 раз сильно уменьшает шанс ошибки
-        for (int i = 0; i < 5; ++i) {
-            YoutubeDownloader youtubeDownloader = new YoutubeDownloader();
+        // Иногда в ответе возвращается null, хотя не должен. Повтор много раз сильно уменьшает шанс ошибки
+        for (int i = 0; i < 50; ++i) {
             RequestVideoInfo requestVideoInfo = new RequestVideoInfo(videoId);
             response = youtubeDownloader.getVideoInfo(requestVideoInfo);
             if (response != null) {

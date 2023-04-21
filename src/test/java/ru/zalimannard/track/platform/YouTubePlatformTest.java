@@ -261,6 +261,7 @@ class YouTubePlatformTest {
 
         assertEquals(0, tracks.size());
     }
+
     @Test
     void download_standardVideo_fileDownloaded() {
         YouTubePlatform youTubePlatform = new YouTubePlatform();

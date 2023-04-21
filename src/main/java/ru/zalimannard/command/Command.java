@@ -10,13 +10,13 @@ import ru.zalimannard.Utils;
 import java.util.ArrayList;
 
 public abstract class Command {
-    protected TrackScheduler scheduler;
-    protected MessageSender messageSender;
-    protected Guild guild;
     private final ArrayList<String> names;
     private final ArrayList<Argument> arguments;
     private final String description;
     private final ArrayList<Requirement> requirements;
+    protected TrackScheduler scheduler;
+    protected MessageSender messageSender;
+    protected Guild guild;
 
     public Command(ArrayList<String> names, ArrayList<Argument> arguments, String description,
                    ArrayList<Requirement> requirements) {

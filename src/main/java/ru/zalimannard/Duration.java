@@ -21,24 +21,6 @@ public class Duration {
         }
     }
 
-    private long durationAsHmsStringToMilliseconds(String hmsAsString) throws IllegalArgumentException {
-        if (!isCorrectDuration(hmsAsString)) {
-            throw new IllegalArgumentException("Duration is not correct: " + hmsAsString);
-        }
-
-        String[] hmsParts = hmsAsString.split(":");
-        long millisecondsInHms = 0;
-        millisecondsInHms += Long.parseLong(hmsParts[hmsParts.length - 1]) * 1000;
-        if (hmsParts.length >= 2) {
-            millisecondsInHms += Long.parseLong(hmsParts[hmsParts.length - 2]) * 60 * 1000;
-        }
-        if (hmsParts.length == 3) {
-            millisecondsInHms += Long.parseLong(hmsParts[hmsParts.length - 3]) * 60 * 60 * 1000;
-        }
-
-        return millisecondsInHms;
-    }
-
     public static boolean isCorrectDuration(String hmsString) {
         if (!isCorrectDurationStructure(hmsString)) {
             return false;
@@ -76,6 +58,24 @@ public class Duration {
             }
         }
         return true;
+    }
+
+    private long durationAsHmsStringToMilliseconds(String hmsAsString) throws IllegalArgumentException {
+        if (!isCorrectDuration(hmsAsString)) {
+            throw new IllegalArgumentException("Duration is not correct: " + hmsAsString);
+        }
+
+        String[] hmsParts = hmsAsString.split(":");
+        long millisecondsInHms = 0;
+        millisecondsInHms += Long.parseLong(hmsParts[hmsParts.length - 1]) * 1000;
+        if (hmsParts.length >= 2) {
+            millisecondsInHms += Long.parseLong(hmsParts[hmsParts.length - 2]) * 60 * 1000;
+        }
+        if (hmsParts.length == 3) {
+            millisecondsInHms += Long.parseLong(hmsParts[hmsParts.length - 3]) * 60 * 60 * 1000;
+        }
+
+        return millisecondsInHms;
     }
 
     public void add(Duration other) {

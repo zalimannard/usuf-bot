@@ -21,8 +21,8 @@ public class MessageSender {
     private final String commandPrefix;
     private final Color goodColor = Color.decode("#2ECC71");
     private final Color badColor = Color.decode("#FF0000");
-    private MessageChannel currentMessageChannel;
     private final Guild guild;
+    private MessageChannel currentMessageChannel;
     private Message previousNowPlaying;
 
     public MessageSender(String commandPrefix, MessageChannel currentMessageChannel, Guild guild) {

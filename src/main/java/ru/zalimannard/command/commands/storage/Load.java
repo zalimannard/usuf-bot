@@ -11,20 +11,21 @@ import ru.zalimannard.track.TrackLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Load extends Command {
     public Load() {
         super(
-                new ArrayList<>(Arrays.asList("load")),
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of("load")),
+                new ArrayList<>(List.of(
                         new Argument(
                                 "№",
                                 Pattern.compile("[0-9]+")
                         )
                 )),
                 "Запустить указанную сохранённую очередь",
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of(
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL
                 ))
         );

@@ -6,21 +6,21 @@ import ru.zalimannard.command.Command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Help extends Command {
     public Help() {
         super(
                 new ArrayList<>(Arrays.asList("help", "h")),
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of(
                         new Argument(
                                 " ",
                                 Pattern.compile(" *")
                         )
                 )),
                 "Открыть это меню",
-                new ArrayList<>(Arrays.asList(
-                ))
+                new ArrayList<>(List.of())
         );
     }
 

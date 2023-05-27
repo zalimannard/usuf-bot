@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class PlayerManagerManager {
     private static PlayerManagerManager INSTANCE;
-    private Map<String, PlayerManager> managers = new HashMap<>();
-    private Map<String, MessageSender> senders = new HashMap<>();
+    private final Map<String, PlayerManager> managers = new HashMap<>();
+    private final Map<String, MessageSender> senders = new HashMap<>();
 
     private PlayerManagerManager() {
 

@@ -15,9 +15,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'net.dv8tion:JDA:5.0.0-beta.8'
+    implementation 'net.dv8tion:JDA:5.0.0-beta.9'
     implementation 'com.sedmelluq:lavaplayer:1.3.77'
-    implementation 'com.github.sealedtx:java-youtube-downloader:3.2.2'
+    implementation 'com.github.sealedtx:java-youtube-downloader:3.2.3'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'

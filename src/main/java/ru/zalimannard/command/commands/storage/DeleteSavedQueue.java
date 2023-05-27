@@ -7,21 +7,21 @@ import ru.zalimannard.command.Command;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class DeleteSavedQueue extends Command {
     public DeleteSavedQueue() {
         super(
-                new ArrayList<>(Arrays.asList("deletesavedqueue")),
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of("deletesavedqueue")),
+                new ArrayList<>(List.of(
                         new Argument(
                                 "№",
                                 Pattern.compile("[0-9]+")
                         )
                 )),
                 "Удалить очередь из сохранённых",
-                new ArrayList<>(Arrays.asList(
-                ))
+                new ArrayList<>(List.of())
         );
     }
 

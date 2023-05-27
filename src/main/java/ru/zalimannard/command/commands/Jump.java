@@ -7,13 +7,14 @@ import ru.zalimannard.command.Requirement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Jump extends Command {
     public Jump() {
         super(
                 new ArrayList<>(Arrays.asList("jump", "j")),
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of(
                         new Argument(
                                 "№",
                                 Pattern.compile("[0-9]+")

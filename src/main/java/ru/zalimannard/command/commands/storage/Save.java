@@ -10,12 +10,13 @@ import ru.zalimannard.command.Requirement;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Save extends Command {
     public Save() {
         super(
-                new ArrayList<>(Arrays.asList("save")),
+                new ArrayList<>(List.of("save")),
                 new ArrayList<>(Arrays.asList(
                         new Argument(
                                 "Название",

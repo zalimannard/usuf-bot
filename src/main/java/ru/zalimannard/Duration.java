@@ -34,10 +34,8 @@ public class Duration {
         }
         if (hmsStringParts.length >= 2) {
             String minutes = hmsStringParts[hmsStringParts.length - 2];
-            if (((hmsStringParts.length > 2) && (minutes.length() != 2)) ||
-                    (Long.parseLong(minutes) >= 60)) {
-                return false;
-            }
+            return ((hmsStringParts.length <= 2) || (minutes.length() == 2)) &&
+                    (Long.parseLong(minutes) < 60);
         }
 
         return true;

@@ -81,7 +81,7 @@ public class YouTubePlatform implements Platform {
             response.add(new Track(
                     searchResultVideoDetail.title(),
                     searchResultVideoDetail.author(),
-                    new Duration(Long.valueOf(searchResultVideoDetails.get(0).lengthSeconds() * 1000)),
+                    new Duration(Long.valueOf(searchResultVideoDetails.get(0).lengthSeconds() * 1000L)),
                     "https://www.youtube.com/watch?v=" + searchResultVideoDetails.get(0).videoId(),
                     ""
             ));

@@ -11,6 +11,7 @@ import ru.zalimannard.track.platform.YouTubePlatform;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Play extends Command {
@@ -28,7 +29,7 @@ public class Play extends Command {
                         )
                 )),
                 "Добавить трек(и) в конец очереди",
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of(
                         Requirement.REQUESTER_IN_THE_VOICE_CHANNEL
                 ))
         );

@@ -6,7 +6,7 @@ import ru.zalimannard.track.platform.YouTubePlatform;
 import java.util.ArrayList;
 
 public class TrackLoader {
-    private ArrayList<Platform> platforms = new ArrayList<>();
+    private final ArrayList<Platform> platforms = new ArrayList<>();
 
     public TrackLoader() {
         platforms.add(new YouTubePlatform());

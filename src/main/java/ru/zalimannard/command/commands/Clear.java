@@ -7,13 +7,14 @@ import ru.zalimannard.command.Requirement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Clear extends Command {
     public Clear() {
         super(
                 new ArrayList<>(Arrays.asList("clear", "c")),
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of(
                         new Argument(
                                 " ",
                                 Pattern.compile(" *")

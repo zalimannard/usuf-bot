@@ -7,12 +7,13 @@ import ru.zalimannard.command.Command;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Show extends Command {
     public Show() {
         super(
-                new ArrayList<>(Arrays.asList("show")),
+                new ArrayList<>(List.of("show")),
                 new ArrayList<>(Arrays.asList(
                         new Argument(
                                 " ",
@@ -24,8 +25,7 @@ public class Show extends Command {
                         )
                 )),
                 "Показать список сохранённых очередей/вывести 10 треков указанной",
-                new ArrayList<>(Arrays.asList(
-                ))
+                new ArrayList<>(List.of())
         );
     }
 

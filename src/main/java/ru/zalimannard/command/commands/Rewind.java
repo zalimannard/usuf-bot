@@ -8,13 +8,14 @@ import ru.zalimannard.command.Requirement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Rewind extends Command {
     public Rewind() {
         super(
                 new ArrayList<>(Arrays.asList("rewind", "rw")),
-                new ArrayList<>(Arrays.asList(
+                new ArrayList<>(List.of(
                         new Argument(
                                 "HH:MM:SS",
                                 Pattern.compile("[0-9:]+")

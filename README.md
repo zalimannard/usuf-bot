@@ -11,8 +11,7 @@
 
 </div>
 
-Замена боту Rythm, которого заблокировал Ютуб потому что он
-злой [Terms of Service - II. Prohibitions](https://developers.google.com/youtube/terms/api-services-terms-of-service).
+Замена боту Rythm, которого заблокировал Ютуб [Terms of Service - II. Prohibitions](https://developers.google.com/youtube/terms/api-services-terms-of-service).
 
 ## :black_nib: Команды
 

@@ -39,10 +39,8 @@
 
 ## :computer: Запуск
 
-Потребуется Java 19 и 7.6. Может запустится и на других, но я не проверял
-
 ```shell
-git clone https://github.com/zalimannard/usuf-bot.git
+mkdir usuf-bot
 cd usuf-bot
 nvim docker-compose.yml
 # *Напишите файл конфигурации. Пример ниже*
